@@ -21,6 +21,16 @@
   box-sizing: border-box;
 }
 
+/* iOS 觸控加固：消除 300ms 延遲與誤縮放、拿掉點按高亮 */
+button,
+input,
+.sr-row,
+.sb-row,
+.leaflet-container {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 html,
 body {
   height: 100%;
@@ -214,6 +224,7 @@ body {
 
 .sb-row .soon {
   color: #d85a30;
+  font-weight: 600;
 }
 
 .syn {

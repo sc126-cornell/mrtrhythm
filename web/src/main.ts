@@ -11,7 +11,17 @@ import { initSearch } from './ui/search.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
 import type { Network, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'M3a-20260718'
+export const BUILD = 'M3b-20260718'
+
+// 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
+window.addEventListener('error', (e) => {
+  const el = document.getElementById('trainCount')
+  if (el) el.textContent = `⚠ ${String(e.message).slice(0, 40)}`
+})
+window.addEventListener('unhandledrejection', (e) => {
+  const el = document.getElementById('trainCount')
+  if (el) el.textContent = `⚠ ${String(e.reason).slice(0, 40)}`
+})
 
 const DAY_LABEL: Record<string, string> = { weekday: '平日', sat: '週六', sun: '週日' }
 const tripKey = (t: Trip) => `${t.route}.${t.dir}.${t.stops[0].d}`
@@ -58,6 +68,7 @@ async function boot() {
 
   function setFollow(mode: 'off' | 'lock' | 'free') {
     follow = mode
+    infoBuilt = false // 按鈕文字（跟隨/取消跟隨）需重建骨架
     backBtn.classList.toggle('hidden', mode !== 'free')
     syncHash()
   }
@@ -67,21 +78,18 @@ async function boot() {
     lastState = state
     speedKmh = 0
     lastSample = null
+    infoBuilt = false // 路線頭／終點／發車時刻換班次需重建骨架
     if (!trip) setFollow('off')
     renderInfo(clock.now())
     syncHash()
   }
 
-  function renderInfo(t: number) {
-    if (!selected || !lastState) {
-      infoEl.classList.add('hidden')
-      return
-    }
+  // ⚠️ iOS 教訓：資訊卡不可每幀 innerHTML 重建——觸控的 touchstart→click 序列中
+  // 節點被抽換會讓 iOS 取消 click（按鈕全滅）。骨架只建一次，每幀僅更新文字節點。
+  let infoBuilt = false
+  function buildInfoSkeleton() {
+    if (!selected) return
     const g = geo.get(selected.path)!
-    const idx = Math.min(lastState.nextStopIdx, selected.stops.length - 1)
-    const next = selected.stops[idx]
-    const eta = Math.max(0, Math.round(next.d - t))
-    const nextName = stations.get(next.s)?.zh ?? next.s
     const badge = selected.synthetic ? '<span class="chip warn">班距推算</span>' : ''
     const followBtn =
       follow === 'off'
@@ -90,12 +98,30 @@ async function boot() {
     infoEl.innerHTML =
       `<div><span class="chip" style="background:${g.lineColor}">${g.lineName}</span>` +
       `<b>往 ${destName(selected)}</b> ${badge}</div>` +
-      `<div class="ti-sub">${lastState.moving ? '下一站' : '停靠'} ${nextName}` +
-      `${lastState.moving ? `・${Math.floor(eta / 60)} 分 ${String(eta % 60).padStart(2, '0')} 秒` : ''}` +
-      `・<span class="spd">${Math.round(speedKmh)} km/h</span></div>` +
+      `<div class="ti-sub"><span id="tiStatus"></span><span id="tiEta"></span>` +
+      `・<span class="spd"><span id="tiSpd">0</span> km/h</span></div>` +
       `<div class="ti-btns">${followBtn}<button data-act="close">✕ 關閉</button>` +
       `<small>${selected.route}・發車 ${fmtTime(selected.stops[0].d).slice(0, 5)}</small></div>`
     infoEl.classList.remove('hidden')
+    infoBuilt = true
+  }
+
+  function renderInfo(t: number) {
+    if (!selected || !lastState) {
+      infoEl.classList.add('hidden')
+      infoBuilt = false
+      return
+    }
+    if (!infoBuilt) buildInfoSkeleton()
+    const idx = Math.min(lastState.nextStopIdx, selected.stops.length - 1)
+    const next = selected.stops[idx]
+    const eta = Math.max(0, Math.round(next.d - t))
+    const nextName = stations.get(next.s)?.zh ?? next.s
+    document.getElementById('tiStatus')!.textContent = `${lastState.moving ? '下一站' : '停靠'} ${nextName}`
+    document.getElementById('tiEta')!.textContent = lastState.moving
+      ? `・${Math.floor(eta / 60)} 分 ${String(eta % 60).padStart(2, '0')} 秒`
+      : ''
+    document.getElementById('tiSpd')!.textContent = String(Math.round(speedKmh))
   }
 
   infoEl.addEventListener('click', (e) => {

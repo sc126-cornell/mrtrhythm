@@ -58,6 +58,10 @@
 ### 偏差與學習
 1. 估時 5 人日 vs 實際約 0.5 人日；累計 M0–M3 估 21.5 人日、實際約 3 人日——引擎與資料層的紮實讓互動層是純組裝。
 2. 瀏覽器自動化測試心得已記錄（暫停再點擊、合成 drag 事件觸發 Leaflet dragstart）。
+3. **用戶 iPhone 實測抓到兩隻 iOS 專屬 bug（2026-07-18 M3b 修復）**：
+   - 資訊卡按鈕全滅：每幀 `innerHTML` 重建卡片，iOS 的 touchstart→click 序列間節點被抽換即取消 click（桌機瞬時 click 無感）。修法＝骨架建一次、每幀僅更新文字節點；看板同理改「清單簽名比對、平時只改倒數 textContent」。**規則入庫：任何可點擊容器不得高頻 innerHTML 重建。**
+   - 搜尋二次失效（iOS）：綜合加固——pointerdown 選取、聚焦全選、hide 計時器可取消、try/catch＋全域錯誤徽章（⚠ 顯示於班數位置，行動端無 console 時可回報）。
+   - 附帶：`touch-action: manipulation` 消除 300ms 延遲。桌機全功能回歸通過。
 
 ## 6. 用戶確認（Gate）
 
