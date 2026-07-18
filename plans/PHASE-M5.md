@@ -23,7 +23,7 @@
 - [x] T5.2 行動打磨（2026-07-18：timebar／backBtn 加 safe-area-inset-bottom）
 - [x] T5.5 發佈配件（2026-07-18：OG meta、favicon.svg（捷字）、關於面板含版本／資料來源／免責／MIT）
 - [x] T5.1 尖峰效能（2026-07-18：`?day=weekday` 時間旅行至 08:30——**149 班 61fps**，門檻 55；「1fps」為背景分頁 rAF 節流的假警報，已記錄）
-- [ ] T5.6 Beta 走查：PRD §7 成功指標逐項核對；repo 轉 Public（經用戶最後確認）
+- [ ] T5.6 Beta 走查：repo 已改名 `mrtrhythm` 並轉 **Public**（2026-07-19，用戶指示「先改名再轉 public」＋AskUser 定名）✅；剩用戶白天對板抽查（PRD 誤差 ≤45s）後即可結案
 
 ## 3. Verify — 技術驗證
 
