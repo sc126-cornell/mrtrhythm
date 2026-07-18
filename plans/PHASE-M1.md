@@ -19,8 +19,8 @@
 
 ## 2. 工作項目（Do）
 
-- [ ] T1.1 `pipeline/fetch.ts`：7 個靜態端點抓取器＋當日快取（raw/ 已有今日資料則跳過）、15s 節流、429 退避
-- [ ] T1.2 `pipeline/build-network.ts`：WKT 解析 → 分段縫合（端點 <30m）→ 車站投影 → 按交路切片組裝 → network.json；含 debug 疊圖頁
+- [x] T1.1 `pipeline/fetch.ts`：7 個靜態端點抓取器＋當日快取（raw/ 已有今日資料則跳過）、15s 節流、429 退避（2026-07-18 完成）
+- [x] T1.2 `pipeline/build-network.ts`：WKT 解析 → 縫合 → 車站投影 → 按交路切片組裝 → network.json；含 debug 疊圖頁（2026-07-18 完成：11 交路長度與官方相符（R-1 28.3km、G-3 1.9km、BR-1 25.1km）；縫合需**轉角約束 75°**（否則支線黏進主線）＋**跨鏈橋接**（大橋頭／七張交會）——兩個坑都已解；殘餘 4 筆警告＝月台座標離軌道 85–123m 的資料特性（BR09、O17），非幾何錯誤）
 - [ ] T1.3 `pipeline/build-timetable.ts`：按（RouteID×Direction）串班（容差 90s），產出三種 serviceDay 的 trips
 - [ ] T1.4 文湖線合成：FirstLast＋Frequency＋S2S 等間隔發車，`synthetic: true`
 - [ ] T1.5 交路完整性：11 條交路全數產出（區間車、支線即獨立交路，Spike 已證實無需另行捕捉）
