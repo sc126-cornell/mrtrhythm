@@ -10,9 +10,13 @@ export interface BaseMap {
   setTheme: (dark: boolean) => void
 }
 
-// 臺灣通用電子地圖（國土測繪中心）——全繁體中文標籤；注意 WMTS 路徑為 {z}/{y}/{x}
+// 臺灣通用電子地圖（國土測繪中心）——全繁體中文標籤
+// 正式環境走 /api/tile（Vercel 全球邊緣快取：NLSC 無海外節點，海外用戶跨洋抓磚極慢）
+// 本地 dev 無 Functions → 直連 NLSC（注意其 WMTS 路徑為 {z}/{y}/{x}）
 // 深色模式：對磚圖 pane 套 CSS 反轉濾鏡（中文標籤得以保留；上層路網／列車不受影響）
-const TILE_URL = 'https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}'
+const TILE_URL = import.meta.env.DEV
+  ? 'https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}'
+  : '/api/tile?z={z}&x={x}&y={y}'
 
 export function createMap(el: string, net: Network, onStationClick: (s: Station) => void): BaseMap {
   const dark = matchMedia('(prefers-color-scheme: dark)').matches
@@ -26,6 +30,8 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
     attribution: '© 內政部國土測繪中心 ｜ 資料來源：交通部 TDX、臺北捷運公司',
     maxZoom: 19,
     detectRetina: true, // 高 DPI 裝置抓高一級縮放磚：NLSC 無 @2x 磚，此為文字銳利化正解
+    updateWhenIdle: true, // 慢網路友善：平移結束才抓磚，減少浪費請求
+    keepBuffer: 4, // 多保留畫面外磚，回拉不重抓
   }).addTo(map)
   tiles.getContainer()?.classList.toggle('tiles-dark', dark)
 
