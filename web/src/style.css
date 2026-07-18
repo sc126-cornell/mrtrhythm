@@ -87,6 +87,26 @@ body {
   padding: 0 5px;
 }
 
+.badge.live.on {
+  color: #0f8a5f;
+  font-weight: 600;
+}
+
+.alertbanner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1050;
+  background: #b3540f;
+  color: #fff;
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  max-width: 70vw;
+}
+
 /* ---- 搜尋 ---- */
 .search {
   position: fixed;

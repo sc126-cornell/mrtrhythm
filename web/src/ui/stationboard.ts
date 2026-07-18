@@ -1,7 +1,7 @@
 // 車站看板：未來班次（時間排序、往向標示線色）＋收班狀態
 // ⚠️ iOS 教訓：不可每秒 innerHTML 全量重建（觸控 click 會因節點抽換被取消）。
 // 班次清單以「簽名」比對——清單不變時僅更新倒數文字節點；變化（班次駛離）才重建列。
-import type { Station } from '../core/types.ts'
+import type { Station, Trip } from '../core/types.ts'
 import type { Schedule } from '../core/schedule.ts'
 import type { RouteGeo } from '../core/geo.ts'
 import { fmtTime } from '../core/clock.ts'
@@ -19,6 +19,7 @@ export function initStationBoard(
   geo: Map<string, RouteGeo>,
   getTime: () => number,
   onChange: () => void,
+  offsetFor: (trip: Trip) => number = () => 0, // 即時校正位移（M4）：實車誤點 → 顯示時刻後移
 ): StationBoard {
   const el = document.getElementById('stationboard')!
   let current: Station | null = null
@@ -41,7 +42,7 @@ export function initStationBoard(
       // 清單未變：只更新倒數文字（不動 DOM 結構）
       const etas = el.querySelectorAll<HTMLElement>('.eta')
       deps.forEach((dep, i) => {
-        const left = dep.d - t
+        const left = dep.d + Math.round(offsetFor(dep.trip)) - t
         const node = etas[i]
         if (node) {
           node.textContent = etaText(left)
@@ -62,11 +63,12 @@ export function initStationBoard(
         const g = geo.get(dep.trip.path)
         const destId = dep.trip.stops[dep.trip.stops.length - 1].s
         const dest = stations.get(destId)?.zh ?? destId
-        const left = dep.d - t
+        const shown = dep.d + Math.round(offsetFor(dep.trip))
+        const left = shown - t
         const syn = dep.trip.synthetic ? '<span class="syn">＊</span>' : ''
         html +=
           `<div class="sb-row"><span class="dest"><i style="background:${g?.lineColor ?? '#888'}"></i>往 ${dest}${syn}</span>` +
-          `<span class="tm">${fmtTime(dep.d).slice(0, 5)}</span>` +
+          `<span class="tm">${fmtTime(shown).slice(0, 5)}</span>` +
           `<span class="eta${left < 90 ? ' soon' : ''}">${etaText(left)}</span></div>`
       }
       html += `<div class="sb-foot">＊＝班距推算（文湖線）・時刻為表定發車</div>`

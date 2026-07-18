@@ -7,6 +7,7 @@ import { buildGeo, stationDict, distMeters } from './core/geo.ts'
 import { positionOf, type TrainState } from './core/position.ts'
 import { initControls } from './ui/controls.ts'
 import { initStationBoard } from './ui/stationboard.ts'
+import { Calibrator, type LiveEvent } from './core/calibrate.ts'
 import { initSearch } from './ui/search.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
 import type { Network, TT, Trip } from './core/types.ts'
@@ -37,6 +38,8 @@ async function boot() {
   const stations = stationDict(net)
   const sched = new Schedule(tt.trips)
   const clock = new SimClock(sec)
+  const calib = new Calibrator()
+  ;(window as unknown as Record<string, unknown>).__calCsv = () => calib.csv()
 
   console.info(`捷奏 BUILD ${BUILD} ・ ${DAY_LABEL[day]}班表 ${tt.trips.length} 班`)
   document.getElementById('dayBadge')!.textContent = DAY_LABEL[day]
@@ -58,7 +61,14 @@ async function boot() {
   })
   const trains = new TrainsLayer(map)
 
-  const board = initStationBoard(sched, stations, geo, () => clock.now(), () => syncHash())
+  const board = initStationBoard(
+    sched,
+    stations,
+    geo,
+    () => clock.now(),
+    () => syncHash(),
+    (trip) => (nowMode() && calib.active ? calib.offsetFor(trip) : 0),
+  )
   initSearch(stations, (s) => {
     map.setView([s.lonlat[1], s.lonlat[0]], Math.max(map.getZoom(), 15))
     board.open(s)
@@ -222,6 +232,43 @@ async function boot() {
     }
   }
 
+  // ---- 即時校正輪詢（僅「現在模式」：非時間旅行、1×、未暫停）----
+  const liveBadge = document.getElementById('liveBadge')!
+  const alertBanner = document.getElementById('alertBanner')!
+  const nowMode = () => !timeTravel && clock.speed === 1 && !clock.paused
+
+  async function pollLive() {
+    if (!nowMode() || document.hidden) return
+    try {
+      const r = await fetch('/api/live')
+      if (!r.ok) return
+      const j = (await r.json()) as { ok: boolean; events?: LiveEvent[] }
+      if (j.ok && Array.isArray(j.events)) calib.ingest(j.events, clock.now(), sched)
+    } catch {
+      // TDX／代理失效：靜默退化為純表定
+    }
+  }
+  async function pollAlerts() {
+    if (document.hidden) return
+    try {
+      const r = await fetch('/api/alerts')
+      if (!r.ok) return
+      const j = (await r.json()) as { ok: boolean; alerts?: Array<{ title: string }> }
+      if (j.ok && j.alerts?.length) {
+        alertBanner.textContent = `⚠ ${j.alerts[0].title}`
+        alertBanner.classList.remove('hidden')
+      } else {
+        alertBanner.classList.add('hidden')
+      }
+    } catch {
+      // 告警取得失敗不影響主功能
+    }
+  }
+  setInterval(pollLive, 20_000)
+  setInterval(pollAlerts, 60_000)
+  pollLive()
+  pollAlerts()
+
   // ---- 效能檔位 ----
   const params = new URLSearchParams(location.search)
   const eco = params.has('eco') || /Mobi|Android/i.test(navigator.userAgent)
@@ -237,13 +284,17 @@ async function boot() {
     lastFrame = nowMs
 
     const t = clock.now()
+    calib.tick()
+    const applyCal = nowMode() && calib.active
+    liveBadge.textContent = applyCal ? '即時⚡' : '表定'
+    liveBadge.classList.toggle('on', applyCal)
     const active = sched.activeAt(t)
     const items: DrawItem[] = []
     let selectedAlive = false
     for (const trip of active) {
       const g = geo.get(trip.path)
       if (!g) continue
-      const st = positionOf(trip, t, g)
+      const st = positionOf(trip, applyCal ? t - calib.offsetFor(trip) : t, g)
       if (!st) continue
       const isSel = trip === selected
       if (isSel) {
