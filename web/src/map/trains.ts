@@ -8,6 +8,11 @@ export interface DrawItem {
   selected: boolean
 }
 
+export interface StationLabel {
+  lonlat: [number, number]
+  zh: string
+}
+
 export class TrainsLayer {
   private readonly map: L.Map
   private readonly canvas: HTMLCanvasElement
@@ -33,7 +38,7 @@ export class TrainsLayer {
     this.canvas.style.height = `${size.y}px`
   }
 
-  draw(items: DrawItem[]) {
+  draw(items: DrawItem[], labels: StationLabel[] = [], dark = false) {
     const dpr = devicePixelRatio || 1
     const ctx = this.ctx
     const size = this.map.getSize()
@@ -41,6 +46,24 @@ export class TrainsLayer {
     ctx.clearRect(0, 0, size.x, size.y)
     const zoom = this.map.getZoom()
     this.hits = []
+
+    // 站名標籤（列車底下先畫）：z≥14 顯示，自繪確保任何 DPI 都銳利、字級舒適
+    if (zoom >= 14 && labels.length) {
+      const fs = zoom >= 16 ? 13 : 12
+      ctx.font = `${fs}px 'Noto Sans TC', system-ui, sans-serif`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'top'
+      ctx.lineWidth = 3
+      ctx.lineJoin = 'round'
+      ctx.strokeStyle = dark ? 'rgba(12, 14, 18, 0.9)' : 'rgba(255, 255, 255, 0.9)'
+      ctx.fillStyle = dark ? '#e6e6e2' : '#26282c'
+      for (const lb of labels) {
+        const p = this.map.latLngToContainerPoint([lb.lonlat[1], lb.lonlat[0]])
+        if (p.x < -60 || p.y < -30 || p.x > size.x + 60 || p.y > size.y + 30) continue
+        ctx.strokeText(lb.zh, p.x, p.y + 8)
+        ctx.fillText(lb.zh, p.x, p.y + 8)
+      }
+    }
 
     for (const it of items) {
       const p = this.map.latLngToContainerPoint([it.st.lonlat[1], it.st.lonlat[0]])

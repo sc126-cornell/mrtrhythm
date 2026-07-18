@@ -76,7 +76,37 @@ async function boot() {
     focusStation(s)
   })
   const trains = new TrainsLayer(map)
-  initTheme(setTheme)
+  let isDark = false
+  initTheme((d) => {
+    isDark = d
+    setTheme(d)
+  })
+
+  // 自繪站名標籤（NLSC 點陣磚無 @2x：銳利/大字不可兼得——站名由我們畫，銳利且字級可控）
+  // 轉乘站同名雙站碼（R10/BL12）合併為一枚，取座標平均
+  const stationLabels: Array<{ lonlat: [number, number]; zh: string }> = []
+  {
+    const byName = new Map<string, Array<[number, number]>>()
+    for (const s of stations.values()) {
+      let arr = byName.get(s.zh)
+      if (!arr) byName.set(s.zh, (arr = []))
+      arr.push(s.lonlat)
+    }
+    for (const [zh, pts] of byName) {
+      const groups: Array<Array<[number, number]>> = []
+      for (const p of pts) {
+        const g = groups.find((G) => distMeters(G[0], p) < 500)
+        if (g) g.push(p)
+        else groups.push([p])
+      }
+      for (const g of groups) {
+        stationLabels.push({
+          lonlat: [g.reduce((a, q) => a + q[0], 0) / g.length, g.reduce((a, q) => a + q[1], 0) / g.length],
+          zh,
+        })
+      }
+    }
+  }
 
   // 關於面板
   const aboutPanel = document.getElementById('aboutPanel')!
@@ -341,7 +371,7 @@ async function boot() {
       }
       items.push({ st, color: g.lineColor, selected: isSel })
     }
-    trains.draw(items)
+    trains.draw(items, stationLabels, isDark)
     ui.tick(t, items.length)
     board.tick(t)
 
