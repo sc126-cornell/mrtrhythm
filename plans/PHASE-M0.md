@@ -2,14 +2,14 @@
 
 | 項目 | 內容 |
 |---|---|
-| 狀態 | 🟡 規劃中（待用戶確認開工） |
+| 狀態 | 🔵 進行中（2026-07-18 用戶確認開工） |
 | 預估 / 實際耗時 | 2.5 人日 / — |
 | 對應任務 | TASKS.md T0.1–T0.4 |
-| 開始 / 完成日期 | — / — |
+| 開始 / 完成日期 | 2026-07-18 / — |
 
 ## 1. 目標（Plan）
 
-1. 專案骨架（`web/`、`api/`、`pipeline/`）推上 GitHub `sc126-cornell/Railisland-`，push 即自動產生 Vercel 預覽網址。
+1. 專案骨架（`web/`、`api/`、`pipeline/`）推上 GitHub `sc126-cornell/Railisland`（2026-07-18 已由 `Railisland-` 改名修正），push 即自動產生 Vercel 預覽網址。
 2. TDX 全部 9 個端點實測完成、樣本落盤，SDD §8 的資料 schema **凍結**（或依實測修訂並記錄差異）。
 3. 專案兩大未知數——LiveBoard 的 EstimateTime 單位、StationTimeTable 實際結構（無車次號的具體樣態）——從「假設」變成「已知」。
 
@@ -18,7 +18,7 @@
 ## 2. 工作項目（Do）
 
 - [ ] T0.1 👤 **用戶本人**：至 tdx.transportdata.tw 註冊會員、建立 API 金鑰（client id/secret），提供後我寫入本地 `.env`（不進 git）
-- [ ] T0.2 Repo 初始化：monorepo 結構、Vite＋TS、ESLint/Prettier、MIT LICENSE、`.gitignore`、接上 GitHub remote
+- [x] T0.2 Repo 初始化：monorepo 結構、Vite＋TS、ESLint/Prettier、MIT LICENSE、`.gitignore`、接上 GitHub remote（2026-07-18 完成：initial commit 已推上 main；`npm run build` 129ms 通過；`auth-check` 缺金鑰時友善提示；Dropbox 已忽略 node_modules/dist）
 - [ ] T0.3 TDX API Spike：9 端點實測（SDD §3.2 清單）、樣本存 `pipeline/samples/`、發現寫入 `SPIKE-NOTES.md`
 - [ ] T0.4 Vercel 接線：建立 Vercel 專案、連 repo、設 TDX 環境變數、`/api/health` 部署跑通
 
