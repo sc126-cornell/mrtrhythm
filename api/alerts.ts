@@ -1,5 +1,5 @@
 // GET /api/alerts —— 北捷營運告警（過濾「正常營運」佔位訊息）
-import { fetchTdx, type Res } from './_tdx'
+import { fetchTdx, type Res } from './_tdx.js'
 
 interface AlertPayload {
   Alerts?: Array<{ AlertID: string; Title: string; Description?: string; Status: number }>

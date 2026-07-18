@@ -1,6 +1,6 @@
 // GET /api/live —— 北捷即時到站看板（事件式）瘦身代理
 // CDN 共享快取 15s：使用者數與 TDX 呼叫數脫鉤（SDD §7；限流見 SPIKE-NOTES §4）
-import { fetchTdx, type Res } from './_tdx'
+import { fetchTdx, type Res } from './_tdx.js'
 
 interface LiveRow {
   LineID: string
