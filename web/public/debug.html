@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>捷奏 debug — 路網疊圖檢查</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body { margin: 0; height: 100%; }
+  #map { height: 100%; }
+  .panel {
+    position: absolute; top: 10px; right: 10px; z-index: 1000;
+    background: rgba(255,255,255,.95); border-radius: 8px; padding: 10px 12px;
+    font: 12px/1.6 system-ui, sans-serif; max-width: 300px; max-height: 70vh; overflow: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  .panel h3 { margin: 0 0 6px; font-size: 13px; }
+  .warn { color: #a33; }
+  .rt { cursor: pointer; user-select: none; }
+  .rt input { vertical-align: -2px; }
+  .meta { color: #888; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel" id="panel"><h3>載入中…</h3></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map', { zoomControl: true })
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO', maxZoom: 19,
+}).addTo(map)
+
+fetch('/data/network.json').then(r => r.json()).then(net => {
+  const panel = document.getElementById('panel')
+  const groups = []
+  let html = `<h3>捷奏路網 debug（${net.version}）</h3>`
+  const allBounds = []
+
+  for (const line of net.lines) {
+    for (const route of line.routes) {
+      const latlngs = route.shape.map(([lon, lat]) => [lat, lon])
+      allBounds.push(...latlngs)
+      const style = route.kind === 'full'
+        ? { color: line.color, weight: 4, opacity: 0.9 }
+        : route.kind === 'short'
+          ? { color: line.color, weight: 2, opacity: 0.8, dashArray: '6 6' }
+          : { color: line.color, weight: 3, opacity: 0.9, dashArray: '2 6' }
+      const poly = L.polyline(latlngs, style)
+      const stas = route.stations.map((id, i) => {
+        const s = line.stations.find(x => x.id === id)
+        const m = L.circleMarker([s.lonlat[1], s.lonlat[0]], {
+          radius: 4, color: '#222', weight: 1, fillColor: '#fff', fillOpacity: 1,
+        })
+        m.bindTooltip(`${id} ${s.zh}<br>${route.id} km ${(route.stationKm[i]/1000).toFixed(1)}`)
+        return m
+      })
+      const g = L.layerGroup([poly, ...stas]).addTo(map)
+      const km = (route.stationKm[route.stationKm.length - 1] / 1000).toFixed(1)
+      groups.push({ id: route.id, g })
+      html += `<div class="rt"><label><input type="checkbox" checked data-rt="${route.id}">
+        <span style="color:${line.color}">■</span> ${route.id} <small>${route.kind} · ${route.stations.length} 站 · ${km}km</small></label></div>`
+    }
+  }
+
+  const warns = (net.meta && net.meta.warnings) || []
+  html += `<div class="meta">警告 ${warns.length} 筆</div>`
+  for (const w of warns) html += `<div class="warn">· ${w}</div>`
+  html += `<div class="meta">產生於 ${net.generatedAt}</div>`
+  panel.innerHTML = html
+
+  panel.addEventListener('change', (e) => {
+    const rt = e.target.getAttribute('data-rt')
+    const item = groups.find(x => x.id === rt)
+    if (item) e.target.checked ? item.g.addTo(map) : item.g.remove()
+  })
+
+  map.fitBounds(allBounds, { padding: [30, 30] })
+}).catch(err => {
+  document.getElementById('panel').innerHTML = `<h3 class="warn">network.json 載入失敗</h3><div>${err}</div>`
+})
+</script>
+</body>
+</html>
