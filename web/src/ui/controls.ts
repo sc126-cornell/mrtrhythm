@@ -3,9 +3,15 @@ import { fmtTime, type SimClock } from '../core/clock.ts'
 
 export interface Controls {
   tick(t: number, trainCount: number): void
+  setSpeed(s: number): void
 }
 
-export function initControls(clock: SimClock, onNow: () => void): Controls {
+export interface ControlHooks {
+  onSpeedChange?: (s: number) => void
+  onJump?: (t: number) => void // 使用者拖曳時間軸（時間旅行開始）
+}
+
+export function initControls(clock: SimClock, onNow: () => void, hooks: ControlHooks = {}): Controls {
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T
   const btnPause = $<HTMLButtonElement>('btnPause')
   const btnNow = $<HTMLButtonElement>('btnNow')
@@ -23,6 +29,7 @@ export function initControls(clock: SimClock, onNow: () => void): Controls {
   const setSpeed = (s: number) => {
     clock.speed = s
     for (const b of speedBtns) b.classList.toggle('on', Number(b.dataset.speed) === s)
+    hooks.onSpeedChange?.(s)
   }
 
   btnPause.addEventListener('click', () => {
@@ -34,7 +41,11 @@ export function initControls(clock: SimClock, onNow: () => void): Controls {
 
   slider.addEventListener('pointerdown', () => (dragging = true))
   slider.addEventListener('pointerup', () => (dragging = false))
-  slider.addEventListener('input', () => clock.jump(Number(slider.value)))
+  slider.addEventListener('input', () => {
+    const v = Number(slider.value)
+    clock.jump(v)
+    hooks.onJump?.(v)
+  })
 
   document.addEventListener('keydown', (e) => {
     if (e.target instanceof HTMLInputElement && e.target.type !== 'range') return
@@ -54,5 +65,6 @@ export function initControls(clock: SimClock, onNow: () => void): Controls {
       countEl.textContent = trainCount > 0 ? `${trainCount} 班運行中` : '收班中'
       if (!dragging) slider.value = String(Math.floor(t))
     },
+    setSpeed,
   }
 }

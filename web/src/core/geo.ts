@@ -47,6 +47,14 @@ export function buildGeo(net: Network): Map<string, RouteGeo> {
   return out
 }
 
+// 兩點距離（公尺，等距圓柱近似）——時速計用
+export function distMeters(a: [number, number], b: [number, number]): number {
+  const rad = Math.PI / 180
+  const x = (b[0] - a[0]) * rad * Math.cos(((a[1] + b[1]) / 2) * rad)
+  const y = (b[1] - a[1]) * rad
+  return Math.hypot(x, y) * 6371000
+}
+
 export function stationDict(net: Network): Map<string, Station> {
   const out = new Map<string, Station>()
   for (const line of net.lines) for (const s of line.stations) if (!out.has(s.id)) out.set(s.id, s)

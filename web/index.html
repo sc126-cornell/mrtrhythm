@@ -15,8 +15,15 @@
       <span id="trainCount" class="badge">載入中…</span>
     </header>
 
+    <div class="search">
+      <input id="searchInput" type="search" placeholder="🔍 搜尋車站（北車、Tamsui…）" autocomplete="off" />
+      <div id="searchResults" class="results hidden"></div>
+    </div>
+
+    <div id="stationboard" class="stationboard hidden"></div>
     <div id="fpsMeter" class="fps hidden"></div>
     <div id="traininfo" class="traininfo hidden"></div>
+    <button id="backBtn" class="backbtn hidden">🎥 回到列車</button>
 
     <footer class="timebar">
       <button id="btnPause" title="暫停（空白鍵）">⏸</button>

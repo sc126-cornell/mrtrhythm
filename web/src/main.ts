@@ -3,14 +3,18 @@ import { createMap } from './map/basemap.ts'
 import { TrainsLayer, type DrawItem } from './map/trains.ts'
 import { SimClock, serviceToday, fmtTime } from './core/clock.ts'
 import { Schedule } from './core/schedule.ts'
-import { buildGeo, stationDict } from './core/geo.ts'
+import { buildGeo, stationDict, distMeters } from './core/geo.ts'
 import { positionOf, type TrainState } from './core/position.ts'
 import { initControls } from './ui/controls.ts'
+import { initStationBoard } from './ui/stationboard.ts'
+import { initSearch } from './ui/search.ts'
+import { parseHash, writeHash } from './ui/deeplink.ts'
 import type { Network, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'M2a-20260718'
+export const BUILD = 'M3a-20260718'
 
 const DAY_LABEL: Record<string, string> = { weekday: '平日', sat: '週六', sun: '週日' }
+const tripKey = (t: Trip) => `${t.route}.${t.dir}.${t.stops[0].d}`
 
 async function boot() {
   const { day, sec } = serviceToday()
@@ -23,18 +27,50 @@ async function boot() {
   const stations = stationDict(net)
   const sched = new Schedule(tt.trips)
   const clock = new SimClock(sec)
-  const map = createMap('map', net)
-  const trains = new TrainsLayer(map)
 
   console.info(`捷奏 BUILD ${BUILD} ・ ${DAY_LABEL[day]}班表 ${tt.trips.length} 班`)
   document.getElementById('dayBadge')!.textContent = DAY_LABEL[day]
 
-  // 列車選取與資訊卡
-  const infoEl = document.getElementById('traininfo')!
+  // ---- 選取與跟隨狀態 ----
   let selected: Trip | null = null
   let lastState: TrainState | null = null
+  let follow: 'off' | 'lock' | 'free' = 'off'
+  let timeTravel = false
+  let speedKmh = 0
+  let lastSample: { t: number; lonlat: [number, number] } | null = null
+
+  const infoEl = document.getElementById('traininfo')!
+  const backBtn = document.getElementById('backBtn')!
+
+  const { map, wasStationClick } = createMap('map', net, (s) => {
+    board.open(s)
+    map.panTo([s.lonlat[1], s.lonlat[0]])
+  })
+  const trains = new TrainsLayer(map)
+
+  const board = initStationBoard(sched, stations, geo, () => clock.now(), () => syncHash())
+  initSearch(stations, (s) => {
+    map.setView([s.lonlat[1], s.lonlat[0]], Math.max(map.getZoom(), 15))
+    board.open(s)
+  })
 
   const destName = (trip: Trip) => stations.get(trip.stops[trip.stops.length - 1].s)?.zh ?? '—'
+
+  function setFollow(mode: 'off' | 'lock' | 'free') {
+    follow = mode
+    backBtn.classList.toggle('hidden', mode !== 'free')
+    syncHash()
+  }
+
+  function select(trip: Trip | null, state: TrainState | null) {
+    selected = trip
+    lastState = state
+    speedKmh = 0
+    lastSample = null
+    if (!trip) setFollow('off')
+    renderInfo(clock.now())
+    syncHash()
+  }
 
   function renderInfo(t: number) {
     if (!selected || !lastState) {
@@ -47,34 +83,120 @@ async function boot() {
     const eta = Math.max(0, Math.round(next.d - t))
     const nextName = stations.get(next.s)?.zh ?? next.s
     const badge = selected.synthetic ? '<span class="chip warn">班距推算</span>' : ''
+    const followBtn =
+      follow === 'off'
+        ? '<button data-act="follow">🎥 跟隨</button>'
+        : '<button data-act="unfollow">取消跟隨</button>'
     infoEl.innerHTML =
-      `<span class="chip" style="background:${g.lineColor}">${g.lineName}</span>` +
-      `<b>往 ${destName(selected)}</b> ${badge}<br>` +
-      `<small>${lastState.moving ? '下一站' : '停靠'} ${nextName}` +
-      `${lastState.moving ? `・約 ${Math.floor(eta / 60)} 分 ${eta % 60} 秒` : ''}` +
-      `・${selected.route}・發車 ${fmtTime(selected.stops[0].d)}</small>`
+      `<div><span class="chip" style="background:${g.lineColor}">${g.lineName}</span>` +
+      `<b>往 ${destName(selected)}</b> ${badge}</div>` +
+      `<div class="ti-sub">${lastState.moving ? '下一站' : '停靠'} ${nextName}` +
+      `${lastState.moving ? `・${Math.floor(eta / 60)} 分 ${String(eta % 60).padStart(2, '0')} 秒` : ''}` +
+      `・<span class="spd">${Math.round(speedKmh)} km/h</span></div>` +
+      `<div class="ti-btns">${followBtn}<button data-act="close">✕ 關閉</button>` +
+      `<small>${selected.route}・發車 ${fmtTime(selected.stops[0].d).slice(0, 5)}</small></div>`
     infoEl.classList.remove('hidden')
   }
 
-  map.on('click', (e) => {
-    const hit = trains.hitTest(e.containerPoint.x, e.containerPoint.y)
-    selected = hit?.trip ?? null
-    lastState = hit
-    renderInfo(clock.now())
-  })
-
-  const ui = initControls(clock, () => {
-    const nowSvc = serviceToday()
-    if (nowSvc.day !== day) {
-      location.reload() // 跨營運日：重載換班表
-      return
+  infoEl.addEventListener('click', (e) => {
+    const act = (e.target as HTMLElement).closest<HTMLElement>('[data-act]')?.dataset.act
+    if (act === 'close') select(null, null)
+    if (act === 'unfollow') {
+      setFollow('off')
+      renderInfo(clock.now())
     }
-    clock.speed = clock.speed // no-op 保持倍速
-    clock.paused = false
-    clock.jump(nowSvc.sec)
+    if (act === 'follow' && lastState) {
+      if (map.getZoom() < 14) map.setView([lastState.lonlat[1], lastState.lonlat[0]], 15)
+      setFollow('lock')
+      renderInfo(clock.now())
+    }
   })
 
-  // 效能檔位：?eco=1 或行動裝置 → 30fps；?fps=1 顯示幀率
+  backBtn.addEventListener('click', () => setFollow('lock'))
+  map.on('dragstart', () => {
+    if (follow === 'lock') setFollow('free')
+  })
+
+  map.on('click', (e) => {
+    if (wasStationClick()) return
+    const hit = trains.hitTest(e.containerPoint.x, e.containerPoint.y)
+    select(hit?.trip ?? null, hit)
+  })
+
+  // ---- 深連結 ----
+  // 注意：跟隨中 panTo 每幀觸發 moveend——用 throttle（含尾端保底）而非 debounce，
+  // 否則計時器永遠被重置、hash 永不更新
+  let hashTimer = 0
+  let lastHashWrite = 0
+  function syncHash() {
+    const write = () => {
+      lastHashWrite = Date.now()
+      const c = map.getCenter()
+      writeHash({
+        c: [c.lat, c.lng],
+        z: map.getZoom(),
+        t: timeTravel ? clock.now() : undefined,
+        spd: clock.speed,
+        f: follow !== 'off' && selected ? tripKey(selected) : undefined,
+        s: board.current?.id,
+      })
+    }
+    clearTimeout(hashTimer)
+    if (Date.now() - lastHashWrite > 1000) write()
+    else hashTimer = window.setTimeout(write, 400)
+  }
+  map.on('moveend', syncHash)
+
+  const ui = initControls(
+    clock,
+    () => {
+      const nowSvc = serviceToday()
+      if (nowSvc.day !== day) {
+        location.reload()
+        return
+      }
+      timeTravel = false
+      clock.paused = false
+      clock.jump(nowSvc.sec)
+      syncHash()
+    },
+    {
+      onSpeedChange: () => syncHash(),
+      onJump: () => {
+        timeTravel = true
+        syncHash()
+      },
+    },
+  )
+
+  // 還原深連結狀態
+  {
+    const dl = parseHash()
+    if (dl.c) map.setView(dl.c, dl.z ?? map.getZoom())
+    if (dl.t !== undefined) {
+      timeTravel = true
+      clock.jump(dl.t)
+    }
+    if (dl.spd) ui.setSpeed(dl.spd)
+    if (dl.s) {
+      const s = stations.get(dl.s)
+      if (s) board.open(s)
+    }
+    if (dl.f) {
+      const trip = sched.trips.find((tr) => tripKey(tr) === dl.f)
+      if (trip) {
+        const g = geo.get(trip.path)
+        const st = g ? positionOf(trip, clock.now(), g) : null
+        if (st) {
+          select(trip, st)
+          if (!dl.c) map.setView([st.lonlat[1], st.lonlat[0]], Math.max(dl.z ?? 15, 14))
+          setFollow('lock')
+        }
+      }
+    }
+  }
+
+  // ---- 效能檔位 ----
   const params = new URLSearchParams(location.search)
   const eco = params.has('eco') || /Mobi|Android/i.test(navigator.userAgent)
   const fpsEl = params.has('fps') ? document.getElementById('fpsMeter')! : null
@@ -85,7 +207,7 @@ async function boot() {
 
   function frame(nowMs: number) {
     requestAnimationFrame(frame)
-    if (eco && nowMs - lastFrame < 30) return // ~30fps
+    if (eco && nowMs - lastFrame < 30) return
     lastFrame = nowMs
 
     const t = clock.now()
@@ -100,18 +222,26 @@ async function boot() {
       const isSel = trip === selected
       if (isSel) {
         selectedAlive = true
+        // 時速：模擬時間下的位移微分＋EMA 平滑
+        if (lastSample && t > lastSample.t) {
+          const v = (distMeters(lastSample.lonlat, st.lonlat) / (t - lastSample.t)) * 3.6
+          speedKmh = speedKmh * 0.85 + v * 0.15
+        }
+        lastSample = { t, lonlat: st.lonlat }
         lastState = st
       }
       items.push({ st, color: g.lineColor, selected: isSel })
     }
     trains.draw(items)
     ui.tick(t, items.length)
+    board.tick(t)
+
     if (selected) {
-      if (!selectedAlive) {
-        selected = null
-        lastState = null
+      if (!selectedAlive) select(null, null)
+      else {
+        if (follow === 'lock' && lastState) map.panTo([lastState.lonlat[1], lastState.lonlat[0]], { animate: false })
+        renderInfo(t)
       }
-      renderInfo(t)
     }
 
     if (fpsEl) {

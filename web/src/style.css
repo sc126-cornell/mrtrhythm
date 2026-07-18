@@ -1,15 +1,16 @@
 :root {
   color-scheme: light dark;
-  --panel: rgba(255, 255, 255, 0.92);
+  --panel: rgba(255, 255, 255, 0.94);
   --fg: #1c1c1a;
   --muted: #6b6b66;
   --accent: #0070bd;
+  --line: rgba(128, 128, 128, 0.22);
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --panel: rgba(24, 26, 31, 0.92);
+    --panel: rgba(24, 26, 31, 0.94);
     --fg: #e8e8e4;
     --muted: #9a9a94;
   }
@@ -43,6 +44,7 @@ body {
   display: none !important;
 }
 
+/* ---- 頂欄 ---- */
 .topbar {
   position: fixed;
   top: 10px;
@@ -75,10 +77,166 @@ body {
   padding: 0 5px;
 }
 
-.fps {
+/* ---- 搜尋 ---- */
+.search {
   position: fixed;
   top: 10px;
   right: 10px;
+  z-index: 1100;
+  width: 230px;
+}
+
+.search input {
+  width: 100%;
+  background: var(--panel);
+  color: var(--fg);
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  outline: none;
+}
+
+.search .results {
+  margin-top: 6px;
+  background: var(--panel);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.sr-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sr-row:hover {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.sr-row small,
+.sr-none {
+  color: var(--muted);
+}
+
+.sr-none {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+/* ---- 車站看板 ---- */
+.stationboard {
+  position: fixed;
+  top: 56px;
+  right: 10px;
+  z-index: 1000;
+  width: 290px;
+  max-height: 62vh;
+  overflow-y: auto;
+  background: var(--panel);
+  color: var(--fg);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.sb-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+
+.sb-head b {
+  font-size: 15px;
+}
+
+.sb-head small {
+  color: var(--muted);
+  flex: 1;
+}
+
+.sb-head button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.sb-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.sb-row:last-of-type {
+  border-bottom: 0;
+}
+
+.sb-row .dest {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sb-row .dest i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.sb-row .tm {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.sb-row .eta {
+  min-width: 52px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sb-row .soon {
+  color: #d85a30;
+}
+
+.syn {
+  color: var(--muted);
+}
+
+.sb-empty {
+  text-align: center;
+  padding: 18px 0 10px;
+  color: var(--muted);
+}
+
+.sb-foot {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---- fps ---- */
+.fps {
+  position: fixed;
+  top: 52px;
+  left: 10px;
   z-index: 1000;
   background: var(--panel);
   color: var(--fg);
@@ -89,6 +247,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- 列車資訊卡 ---- */
 .traininfo {
   position: fixed;
   left: 50%;
@@ -101,12 +260,44 @@ body {
   padding: 10px 14px;
   box-shadow: var(--shadow);
   font-size: 14px;
-  line-height: 1.6;
-  max-width: min(92vw, 420px);
+  line-height: 1.7;
+  max-width: min(92vw, 430px);
 }
 
-.traininfo small {
+.ti-sub {
   color: var(--muted);
+  font-size: 13px;
+}
+
+.ti-sub .spd {
+  font-variant-numeric: tabular-nums;
+}
+
+.ti-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.ti-btns button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ti-btns button:hover {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.ti-btns small {
+  color: var(--muted);
+  margin-left: auto;
+  font-size: 11px;
 }
 
 .chip {
@@ -122,6 +313,23 @@ body {
   background: #8a6d1d;
 }
 
+/* ---- 回到列車 ---- */
+.backbtn {
+  position: fixed;
+  right: 12px;
+  bottom: 130px;
+  z-index: 1000;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+/* ---- 時間列 ---- */
 .timebar {
   position: fixed;
   left: 50%;
@@ -180,12 +388,30 @@ body {
   accent-color: var(--accent);
 }
 
+/* ---- 手機 ---- */
 @media (max-width: 640px) {
+  .search {
+    width: 44vw;
+  }
+  .stationboard {
+    top: auto;
+    right: 10px;
+    left: 10px;
+    bottom: 74px;
+    width: auto;
+    max-height: 44vh;
+  }
+  .traininfo {
+    bottom: 74px;
+  }
+  .backbtn {
+    bottom: 150px;
+  }
   #timeSlider {
-    width: 26vw;
+    width: 24vw;
   }
   .clock {
-    min-width: 64px;
+    min-width: 62px;
     font-size: 13px;
   }
 }

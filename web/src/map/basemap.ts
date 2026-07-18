@@ -1,9 +1,15 @@
 // Leaflet 底圖＋路網／車站靜態圖層
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import type { Network } from '../core/types.ts'
+import type { Network, Station } from '../core/types.ts'
 
-export function createMap(el: string, net: Network): L.Map {
+export interface BaseMap {
+  map: L.Map
+  // 站點與地圖 click 來自同一 DOM 事件——用時間戳旗標讓 main 避免「點站誤選到底下的列車」
+  wasStationClick: () => boolean
+}
+
+export function createMap(el: string, net: Network, onStationClick: (s: Station) => void): BaseMap {
   const dark = matchMedia('(prefers-color-scheme: dark)').matches
   const map = L.map(el, {
     center: [25.046, 121.517],
@@ -28,7 +34,7 @@ export function createMap(el: string, net: Network): L.Map {
       ).addTo(map)
     }
 
-  // 車站節點（不同線的共站各自有 StationID，重疊屬正常）
+  let lastStaClick = 0
   for (const line of net.lines)
     for (const s of line.stations) {
       L.circleMarker([s.lonlat[1], s.lonlat[0]], {
@@ -40,8 +46,12 @@ export function createMap(el: string, net: Network): L.Map {
         fillOpacity: 1,
       })
         .bindTooltip(`${s.zh} ${s.id}`, { direction: 'top' })
+        .on('click', () => {
+          lastStaClick = Date.now()
+          onStationClick(s)
+        })
         .addTo(map)
     }
 
-  return map
+  return { map, wasStationClick: () => Date.now() - lastStaClick < 150 }
 }
