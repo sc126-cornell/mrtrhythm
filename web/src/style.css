@@ -65,6 +65,11 @@ body {
   pointer-events: none;
 }
 
+/* 深色模式底圖：反轉濾鏡（NLSC 通用電子地圖為淺色系，反轉後保留中文標籤） */
+.tiles-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.55);
+}
+
 .hidden {
   display: none !important;
 }
@@ -207,7 +212,8 @@ body {
   background: var(--panel);
   border-radius: 10px;
   box-shadow: var(--shadow);
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 46vh;
 }
 
 .sr-row {
@@ -493,10 +499,24 @@ body {
   accent-color: var(--accent);
 }
 
-/* ---- 手機 ---- */
+/* ---- 手機：上方改兩列（第一列狀態、第二列全寬搜尋），互不重疊 ---- */
 @media (max-width: 640px) {
+  .topbar {
+    left: 10px;
+    right: 10px;
+    justify-content: space-between;
+  }
   .search {
-    width: 44vw;
+    top: 54px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+  }
+  .search .results {
+    max-height: 34vh;
+  }
+  .fps {
+    top: 100px;
   }
   .stationboard {
     top: auto;
@@ -504,13 +524,13 @@ body {
     left: 10px;
     bottom: 74px;
     width: auto;
-    max-height: 44vh;
+    max-height: 42vh;
   }
   .traininfo {
     bottom: 74px;
   }
   .backbtn {
-    bottom: 150px;
+    bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
   #timeSlider {
     width: 24vw;

@@ -10,8 +10,9 @@ export interface BaseMap {
   setTheme: (dark: boolean) => void
 }
 
-const tileUrl = (dark: boolean) =>
-  `https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`
+// 臺灣通用電子地圖（國土測繪中心）——全繁體中文標籤；注意 WMTS 路徑為 {z}/{y}/{x}
+// 深色模式：對磚圖 pane 套 CSS 反轉濾鏡（中文標籤得以保留；上層路網／列車不受影響）
+const TILE_URL = 'https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}'
 
 export function createMap(el: string, net: Network, onStationClick: (s: Station) => void): BaseMap {
   const dark = matchMedia('(prefers-color-scheme: dark)').matches
@@ -21,10 +22,11 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
     zoomControl: false,
   })
   L.control.zoom({ position: 'bottomright' }).addTo(map)
-  const tiles = L.tileLayer(tileUrl(dark), {
-    attribution: '© OpenStreetMap © CARTO ｜ 資料來源：交通部 TDX、臺北捷運公司',
+  const tiles = L.tileLayer(TILE_URL, {
+    attribution: '© 內政部國土測繪中心 ｜ 資料來源：交通部 TDX、臺北捷運公司',
     maxZoom: 19,
   }).addTo(map)
+  tiles.getContainer()?.classList.toggle('tiles-dark', dark)
 
   const canvasR = L.canvas({ padding: 0.3 })
 
@@ -63,7 +65,7 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
     map,
     wasStationClick: () => Date.now() - lastStaClick < 150,
     setTheme(d: boolean) {
-      tiles.setUrl(tileUrl(d))
+      tiles.getContainer()?.classList.toggle('tiles-dark', d)
       for (const m of staMarkers) m.setStyle({ color: d ? '#cfcfcf' : '#333', fillColor: d ? '#1b1e24' : '#fff' })
     },
   }
