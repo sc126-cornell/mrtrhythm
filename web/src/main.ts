@@ -12,7 +12,7 @@ import { initSearch } from './ui/search.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
 import type { Network, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'M3b-20260718'
+export const BUILD = 'M4a-20260718'
 
 // 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
 window.addEventListener('error', (e) => {
