@@ -73,9 +73,10 @@ const specificity = (sd: ServiceDayFlags): number =>
   ).length
 
 interface Trip {
-  route: string
+  route: string // 名義交路（顯示用）
   dir: 0 | 1
   synthetic: boolean
+  path: string // 幾何交路：停靠實際落在此交路的站鏈上（cascade／跨鏈群組可能 ≠ route）
   stops: Array<{ s: string; d: number }>
 }
 
@@ -107,7 +108,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
         }
 
         for (const [dest, staMap] of groups) {
-          let pick: { order: string[]; runs: number[]; stops: number[] } | null = null
+          let pick: { rtId: string; order: string[]; runs: number[]; stops: number[] } | null = null
           let pickSpan = Infinity
           for (const rt of line.routes) {
             for (const rev of [false, true]) {
@@ -121,7 +122,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
                 const runsA = rev ? [...rt.runTimes].reverse() : rt.runTimes
                 const stopsA = rev ? [...rt.stopTimes].reverse() : rt.stopTimes
                 pickSpan = di - start
-                pick = { order: ch.slice(start, di + 1), runs: runsA.slice(start, di), stops: stopsA.slice(start, di) }
+                pick = { rtId: rt.id, order: ch.slice(start, di + 1), runs: runsA.slice(start, di), stops: stopsA.slice(start, di) }
               }
             }
           }
@@ -129,7 +130,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
             stats.push(`⚠️ ${route.id} dir${dir}→${dest}: 無可涵蓋的交路鏈，跳過（${staMap.size} 站）`)
             continue
           }
-          const { order, runs, stops } = pick
+          const { rtId, order, runs, stops } = pick
 
           const pool = new Map<string, Array<{ t: number; claimed: boolean }>>()
           let totalTimes = 0
@@ -172,7 +173,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
                 stopsOut.push({ s: order[i], d: Math.round(tExpect / 60) * 60 })
               }
             }
-            trips.push({ route: route.id, dir, synthetic: false, stops: stopsOut })
+            trips.push({ route: route.id, dir, synthetic: false, path: rtId, stops: stopsOut })
           }
 
           // 殘餘時刻＝中途起點班次（實測：平日大安發車往北投、中途站發車往昆陽等）
@@ -219,7 +220,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
               if (got >= 1) {
                 claimed += 1 + got
                 cascaded++
-                trips.push({ route: route.id, dir, synthetic: false, stops: stopsOut })
+                trips.push({ route: route.id, dir, synthetic: false, path: rtId, stops: stopsOut })
               } else {
                 noise++
               }
@@ -270,7 +271,7 @@ for (const serviceDay of ['weekday', 'sat', 'sun'] as const) {
         cur += runs[i - 1] + (i < chain.length - 1 ? stops[i - 1] : 0)
         stopsOut.push({ s: chain[i], d: Math.round(cur / 60) * 60 })
       }
-      trips.push({ route: brRoute.id, dir, synthetic: true, stops: stopsOut })
+      trips.push({ route: brRoute.id, dir, synthetic: true, path: brRoute.id, stops: stopsOut })
       n++
     }
     stats.push(`BR-1 dir${dir}: 合成 ${n} 班（${fl.FirstTrainTime}–${fl.LastTrainTime}）`)

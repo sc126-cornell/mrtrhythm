@@ -7,11 +7,30 @@
     <title>捷奏 — 北捷即時地圖</title>
   </head>
   <body>
-    <main class="boot">
-      <h1>捷奏</h1>
-      <p class="tagline">打開網頁，就看見整個台北捷運正在呼吸。</p>
-      <p id="status">啟動中…</p>
-    </main>
+    <div id="map"></div>
+
+    <header class="topbar">
+      <span class="logo">捷奏</span>
+      <span id="dayBadge" class="badge day">—</span>
+      <span id="trainCount" class="badge">載入中…</span>
+    </header>
+
+    <div id="fpsMeter" class="fps hidden"></div>
+    <div id="traininfo" class="traininfo hidden"></div>
+
+    <footer class="timebar">
+      <button id="btnPause" title="暫停（空白鍵）">⏸</button>
+      <div class="speeds">
+        <button data-speed="1" class="on">1×</button>
+        <button data-speed="10">10×</button>
+        <button data-speed="30">30×</button>
+        <button data-speed="60">60×</button>
+      </div>
+      <span id="clockDisplay" class="clock">--:--:--</span>
+      <input id="timeSlider" type="range" min="18000" max="97200" step="60" value="43200" aria-label="時間軸" />
+      <button id="btnNow" title="跳回現在時刻">現在</button>
+    </footer>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

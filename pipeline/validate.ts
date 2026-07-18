@@ -17,7 +17,7 @@ interface Network {
 }
 interface TT {
   serviceDay: string
-  trips: Array<{ route: string; dir: 0 | 1; synthetic: boolean; stops: Array<{ s: string; d: number }> }>
+  trips: Array<{ route: string; dir: 0 | 1; synthetic: boolean; path: string; stops: Array<{ s: string; d: number }> }>
 }
 
 const errors: string[] = []
@@ -59,9 +59,15 @@ for (const day of ['weekday', 'sat', 'sun']) {
   const [lo, hi] = BANDS[day]
   ok(tt.trips.length >= lo && tt.trips.length <= hi, `tt-${day} 班次數 ${tt.trips.length} 超出 ${lo}–${hi}`)
 
+  // path 幾何映射快取：交路 → (站 → 里程)
+  const kmMaps = new Map<string, Map<string, number>>()
+  for (const [id, r] of routeById) kmMaps.set(id, new Map(r.stations.map((s, i) => [s, r.stationKm[i]])))
+
   const seenRoutes = new Set<string>()
   let badMono = 0
   let badGap = 0
+  let badPath = 0
+  let badKmOrder = 0
   for (const trip of tt.trips) {
     seenRoutes.add(trip.route)
     const r = routeById.get(trip.route)
@@ -73,7 +79,19 @@ for (const day of ['weekday', 'sat', 'sun']) {
       // 站間耗時上限：S2S 最大值 + 停靠 + 緩衝（防瞬移／死班）
       if (dt > 15 * 60) badGap++
     }
+    // 渲染前提：每個停靠都在 path 鏈上，且沿鏈里程嚴格單調（方向一致、無折返）
+    const km = kmMaps.get(trip.path)
+    if (!km || trip.stops.some((st) => !km.has(st.s))) {
+      badPath++
+    } else {
+      const ks = trip.stops.map((st) => km.get(st.s)!)
+      const sign = Math.sign(ks[ks.length - 1] - ks[0])
+      for (let i = 1; i < ks.length; i++)
+        if (Math.sign(ks[i] - ks[i - 1]) !== sign) { badKmOrder++; break }
+    }
   }
+  ok(badPath === 0, `tt-${day}: ${badPath} 班的停靠不在 path 鏈上`)
+  ok(badKmOrder === 0, `tt-${day}: ${badKmOrder} 班沿 path 里程非單調`)
   ok(badMono === 0, `tt-${day}: ${badMono} 個站間時刻倒退`)
   if (badGap > 0) warns.push(`tt-${day}: ${badGap} 個站間 >15min 的長間隔`)
   // G-2 台電大樓區間車僅平日行駛（實測），假日缺席屬預期
