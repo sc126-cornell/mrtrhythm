@@ -11,7 +11,7 @@ import { Calibrator, type LiveEvent } from './core/calibrate.ts'
 import { initSearch } from './ui/search.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
 import { initTheme } from './ui/theme.ts'
-import type { Network, TT, Trip } from './core/types.ts'
+import type { Network, Station, TT, Trip } from './core/types.ts'
 
 export const BUILD = 'M5a-20260718'
 
@@ -60,9 +60,17 @@ async function boot() {
   const infoEl = document.getElementById('traininfo')!
   const backBtn = document.getElementById('backBtn')!
 
+  // 手機看板為底部半屏：聚焦車站時把它抬到可視區上緣 ~28%，避免被看板蓋住
+  const isMobile = () => matchMedia('(max-width: 640px)').matches
+  function focusStation(s: Station, minZoom = 0) {
+    const target: [number, number] = [s.lonlat[1], s.lonlat[0]]
+    map.setView(target, Math.max(map.getZoom(), minZoom))
+    if (isMobile()) map.panBy([0, map.getSize().y * 0.22], { animate: false })
+  }
+
   const { map, wasStationClick, setTheme } = createMap('map', net, (s) => {
     board.open(s)
-    map.panTo([s.lonlat[1], s.lonlat[0]])
+    focusStation(s)
   })
   const trains = new TrainsLayer(map)
   initTheme(setTheme)
@@ -85,8 +93,8 @@ async function boot() {
     (trip) => (nowMode() && calib.active ? calib.offsetFor(trip) : 0),
   )
   initSearch(stations, (s) => {
-    map.setView([s.lonlat[1], s.lonlat[0]], Math.max(map.getZoom(), 15))
     board.open(s)
+    focusStation(s, 15)
   })
 
   const destName = (trip: Trip) => stations.get(trip.stops[trip.stops.length - 1].s)?.zh ?? '—'
