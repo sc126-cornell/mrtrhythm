@@ -127,5 +127,5 @@
 2. P0 **包含**跟車模式（F5）
 3. 產品名稱：**捷奏**；網域另定（不擋開工）
 4. 底圖：CARTO 免費層（SDD ADR-5 定案）
-5. GitHub 公開＋MIT：是。repo 為用戶帳號 `sc126-cornell/Railisland-`（目前 Private＋空，首次對外發佈前轉 Public）
+5. GitHub 公開＋MIT：是。repo 為 `sc126-cornell/mrtrhythm`（2026-07-19 發佈前自 Railisland 改名，與網域／Vercel 專案一致）
 6. 開發流程：每個 phase 建立 `plans/PHASE-*.md` 計畫檔；完成後經 code review → verify → validate，結果寫回計畫檔並經用戶確認，才進入下一 phase（詳見 TASKS.md「工作方式」）

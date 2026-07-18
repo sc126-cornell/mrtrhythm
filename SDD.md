@@ -235,7 +235,7 @@ state.ts             輕量 pub/sub（無框架）
 └─ .github/workflows/daily-data.yml   每日 04:10 抓資料 → commit → 觸發 Vercel 部署
 ```
 
-- 部署：GitHub repo（`sc126-cornell/Railisland-`）連結 Vercel 專案，push 即部署；本 session 具 Vercel 整合，可直接代操部署與環境變數設定。
+- 部署：GitHub repo（`sc126-cornell/mrtrhythm`，2026-07-19 改名）連結 Vercel 專案，push 即部署；本 session 具 Vercel 整合，可直接代操部署與環境變數設定。
 - 監測：Vercel Analytics（Web Vitals）＋函式錯誤日誌；前端全域 error handler 上報簡易 endpoint（P1）。
 
 ## 10. 安全與合規
