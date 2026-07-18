@@ -1,0 +1,45 @@
+# 每日資料更新：抓 TDX → 建置路網與時刻 → 驗證 → 有變更才 commit（觸發 Vercel 部署）
+# 驗證不過＝job 失敗＝不 commit＝線上保留昨日資料（GitHub 會寄失敗通知）
+name: daily-data
+
+on:
+  schedule:
+    - cron: '10 20 * * *' # 20:10 UTC = 04:10 台北
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: 抓取並建置（fetch → network → timetable → validate）
+        env:
+          TDX_CLIENT_ID: ${{ secrets.TDX_CLIENT_ID }}
+          TDX_CLIENT_SECRET: ${{ secrets.TDX_CLIENT_SECRET }}
+        run: |
+          npx tsx pipeline/fetch.ts
+          npx tsx pipeline/build-network.ts
+          npx tsx pipeline/build-timetable.ts
+          npx tsx pipeline/validate.ts
+
+      - name: 有變更才 commit（generatedAt 戳記使每日必有一筆版本，屬預期）
+        run: |
+          git config user.name "jiezou-data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/public/data
+          if git diff --cached --quiet; then
+            echo "資料無變更，跳過 commit"
+          else
+            git commit -m "data: 每日自動更新 $(TZ=Asia/Taipei date +%F)"
+            git push
+          fi

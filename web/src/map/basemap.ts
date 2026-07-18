@@ -7,7 +7,11 @@ export interface BaseMap {
   map: L.Map
   // 站點與地圖 click 來自同一 DOM 事件——用時間戳旗標讓 main 避免「點站誤選到底下的列車」
   wasStationClick: () => boolean
+  setTheme: (dark: boolean) => void
 }
+
+const tileUrl = (dark: boolean) =>
+  `https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`
 
 export function createMap(el: string, net: Network, onStationClick: (s: Station) => void): BaseMap {
   const dark = matchMedia('(prefers-color-scheme: dark)').matches
@@ -17,7 +21,7 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
     zoomControl: false,
   })
   L.control.zoom({ position: 'bottomright' }).addTo(map)
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
+  const tiles = L.tileLayer(tileUrl(dark), {
     attribution: '© OpenStreetMap © CARTO ｜ 資料來源：交通部 TDX、臺北捷運公司',
     maxZoom: 19,
   }).addTo(map)
@@ -35,9 +39,10 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
     }
 
   let lastStaClick = 0
+  const staMarkers: L.CircleMarker[] = []
   for (const line of net.lines)
     for (const s of line.stations) {
-      L.circleMarker([s.lonlat[1], s.lonlat[0]], {
+      const m = L.circleMarker([s.lonlat[1], s.lonlat[0]], {
         renderer: canvasR,
         radius: 3.5,
         color: dark ? '#cfcfcf' : '#333',
@@ -51,7 +56,15 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
           onStationClick(s)
         })
         .addTo(map)
+      staMarkers.push(m)
     }
 
-  return { map, wasStationClick: () => Date.now() - lastStaClick < 150 }
+  return {
+    map,
+    wasStationClick: () => Date.now() - lastStaClick < 150,
+    setTheme(d: boolean) {
+      tiles.setUrl(tileUrl(d))
+      for (const m of staMarkers) m.setStyle({ color: d ? '#cfcfcf' : '#333', fillColor: d ? '#1b1e24' : '#fff' })
+    },
+  }
 }

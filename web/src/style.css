@@ -16,6 +16,21 @@
   }
 }
 
+/* 手動外觀覆蓋（ui/theme.ts 設定 data-theme；未設＝跟隨系統） */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --panel: rgba(24, 26, 31, 0.94);
+  --fg: #e8e8e4;
+  --muted: #9a9a94;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --panel: rgba(255, 255, 255, 0.94);
+  --fg: #1c1c1a;
+  --muted: #6b6b66;
+}
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -90,6 +105,65 @@ body {
 .badge.live.on {
   color: #0f8a5f;
   font-weight: 600;
+}
+
+.iconbtn {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 0 2px;
+}
+
+.iconbtn:hover {
+  color: var(--fg);
+}
+
+.about {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.about-card {
+  background: var(--panel);
+  color: var(--fg);
+  border-radius: 14px;
+  padding: 18px 20px;
+  max-width: min(92vw, 480px);
+  font-size: 13px;
+  line-height: 1.8;
+  box-shadow: var(--shadow);
+}
+
+.about-card h3 {
+  margin-bottom: 6px;
+}
+
+.about-card small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.about-card p {
+  margin-bottom: 8px;
+}
+
+.about-card a {
+  color: var(--accent);
+}
+
+.about-card button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 4px 14px;
+  cursor: pointer;
 }
 
 .alertbanner {
@@ -348,7 +422,7 @@ body {
 .backbtn {
   position: fixed;
   right: 12px;
-  bottom: 130px;
+  bottom: calc(130px + env(safe-area-inset-bottom, 0px));
   z-index: 1000;
   border: 0;
   background: var(--accent);
@@ -365,7 +439,7 @@ body {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   z-index: 1000;
   display: flex;
   align-items: center;

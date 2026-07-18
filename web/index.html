@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="捷奏——台北捷運即時模擬地圖：依當日時刻表推演全網列車，官方到站看板即時校正。" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content="捷奏 — 北捷即時地圖" />
+    <meta property="og:description" content="打開網頁，就看見整個台北捷運正在呼吸——時刻表推演＋官方看板即時校正。" />
+    <meta property="og:url" content="https://mrtrhythm.scottchen0622.com/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
     <title>捷奏 — 北捷即時地圖</title>
   </head>
   <body>
@@ -14,6 +20,8 @@
       <span id="dayBadge" class="badge day">—</span>
       <span id="trainCount" class="badge">載入中…</span>
       <span id="liveBadge" class="badge live" title="即時⚡＝官方到站看板校正中；表定＝純時刻表模擬">表定</span>
+      <button id="themeBtn" class="iconbtn" title="外觀">◐</button>
+      <button id="aboutBtn" class="iconbtn" title="關於捷奏">ℹ</button>
     </header>
 
     <div class="search">
@@ -22,6 +30,15 @@
     </div>
 
     <div id="alertBanner" class="alertbanner hidden"></div>
+    <div id="aboutPanel" class="about hidden">
+      <div class="about-card">
+        <h3>捷奏 <small id="aboutBuild"></small></h3>
+        <p>依 TDX 當日時刻表推演台北捷運全網列車，營運時段以官方到站看板即時校正（左上「即時⚡」）。列車位置為推演結果，僅供參考，請以現場資訊為準。</p>
+        <p>資料來源：交通部 TDX 運輸資料流通服務平臺、臺北大眾捷運股份有限公司（政府資料開放授權條款）｜底圖 © OpenStreetMap © CARTO</p>
+        <p><a href="https://github.com/sc126-cornell/Railisland" target="_blank" rel="noopener">GitHub 開源（MIT）</a>・回報問題也請走 GitHub Issues</p>
+        <button id="aboutClose">關閉</button>
+      </div>
+    </div>
     <div id="stationboard" class="stationboard hidden"></div>
     <div id="fpsMeter" class="fps hidden"></div>
     <div id="traininfo" class="traininfo hidden"></div>

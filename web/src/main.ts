@@ -10,9 +10,10 @@ import { initStationBoard } from './ui/stationboard.ts'
 import { Calibrator, type LiveEvent } from './core/calibrate.ts'
 import { initSearch } from './ui/search.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
+import { initTheme } from './ui/theme.ts'
 import type { Network, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'M4a-20260718'
+export const BUILD = 'M5a-20260718'
 
 // 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
 window.addEventListener('error', (e) => {
@@ -28,7 +29,11 @@ const DAY_LABEL: Record<string, string> = { weekday: '平日', sat: '週六', su
 const tripKey = (t: Trip) => `${t.route}.${t.dir}.${t.stops[0].d}`
 
 async function boot() {
-  const { day, sec } = serviceToday()
+  const svc = serviceToday()
+  // ?day=weekday|sat|sun：測試用日別覆蓋（尖峰效能驗證等）
+  const forced = new URLSearchParams(location.search).get('day')
+  const day = forced === 'weekday' || forced === 'sat' || forced === 'sun' ? forced : svc.day
+  const sec = svc.sec
   const [net, tt] = await Promise.all([
     fetch('/data/network.json').then((r) => r.json() as Promise<Network>),
     fetch(`/data/tt-${day}.json`).then((r) => r.json() as Promise<TT>),
@@ -55,11 +60,21 @@ async function boot() {
   const infoEl = document.getElementById('traininfo')!
   const backBtn = document.getElementById('backBtn')!
 
-  const { map, wasStationClick } = createMap('map', net, (s) => {
+  const { map, wasStationClick, setTheme } = createMap('map', net, (s) => {
     board.open(s)
     map.panTo([s.lonlat[1], s.lonlat[0]])
   })
   const trains = new TrainsLayer(map)
+  initTheme(setTheme)
+
+  // 關於面板
+  const aboutPanel = document.getElementById('aboutPanel')!
+  document.getElementById('aboutBuild')!.textContent = BUILD
+  document.getElementById('aboutBtn')!.addEventListener('click', () => aboutPanel.classList.remove('hidden'))
+  document.getElementById('aboutClose')!.addEventListener('click', () => aboutPanel.classList.add('hidden'))
+  aboutPanel.addEventListener('click', (e) => {
+    if (e.target === aboutPanel) aboutPanel.classList.add('hidden')
+  })
 
   const board = initStationBoard(
     sched,
