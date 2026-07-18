@@ -65,9 +65,10 @@ body {
   pointer-events: none;
 }
 
-/* 深色模式底圖：反轉濾鏡（NLSC 通用電子地圖為淺色系，反轉後保留中文標籤） */
+/* 深色模式底圖：反轉濾鏡（NLSC 通用電子地圖為淺色系，反轉後保留中文標籤）
+   對比略拉高以維持夜間文字可讀性（用戶回饋調校） */
 .tiles-dark {
-  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.55);
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(1.06) saturate(0.5);
 }
 
 .hidden {
@@ -472,6 +473,13 @@ body {
   background: rgba(128, 128, 128, 0.18);
 }
 
+/* 偏離即時（時間旅行／倍速／暫停）時，「現在」亮起指路 */
+.timebar button.attention {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
 .speeds {
   display: flex;
   gap: 2px;
@@ -532,11 +540,24 @@ body {
   .backbtn {
     bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
+  /* 時間列壓縮：確保「現在」按鈕在窄幅畫面內完整可見（iPhone 實測曾被裁切） */
+  .timebar {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+  .timebar button {
+    padding: 4px 6px;
+    font-size: 13px;
+  }
+  .speeds button {
+    font-size: 11px;
+    padding: 3px 5px;
+  }
   #timeSlider {
-    width: 24vw;
+    width: 17vw;
   }
   .clock {
-    min-width: 62px;
-    font-size: 13px;
+    min-width: 56px;
+    font-size: 12px;
   }
 }

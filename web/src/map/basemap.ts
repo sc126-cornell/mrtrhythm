@@ -25,6 +25,7 @@ export function createMap(el: string, net: Network, onStationClick: (s: Station)
   const tiles = L.tileLayer(TILE_URL, {
     attribution: '© 內政部國土測繪中心 ｜ 資料來源：交通部 TDX、臺北捷運公司',
     maxZoom: 19,
+    detectRetina: true, // 高 DPI 裝置抓高一級縮放磚：NLSC 無 @2x 磚，此為文字銳利化正解
   }).addTo(map)
   tiles.getContainer()?.classList.toggle('tiles-dark', dark)
 

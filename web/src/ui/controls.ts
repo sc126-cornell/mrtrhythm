@@ -4,6 +4,7 @@ import { fmtTime, type SimClock } from '../core/clock.ts'
 export interface Controls {
   tick(t: number, trainCount: number): void
   setSpeed(s: number): void
+  syncPlay(): void // 外部改動 clock.paused 後同步 ⏸/▶ 圖示（回到即時用）
 }
 
 export interface ControlHooks {
@@ -66,5 +67,6 @@ export function initControls(clock: SimClock, onNow: () => void, hooks: ControlH
       if (!dragging) slider.value = String(Math.floor(t))
     },
     setSpeed,
+    syncPlay: renderPause,
   }
 }

@@ -56,6 +56,9 @@ async function boot() {
   let timeTravel = false
   let speedKmh = 0
   let lastSample: { t: number; lonlat: [number, number] } | null = null
+  // ⚠️ 必須在所有回呼接線（board offsetFor 等）之前宣告——曾因排在深連結還原之後，
+  // 造成帶 s= 的分享連結開啟即 TDZ 崩潰
+  const nowMode = () => !timeTravel && clock.speed === 1 && !clock.paused
 
   const infoEl = document.getElementById('traininfo')!
   const backBtn = document.getElementById('backBtn')!
@@ -208,17 +211,7 @@ async function boot() {
 
   const ui = initControls(
     clock,
-    () => {
-      const nowSvc = serviceToday()
-      if (nowSvc.day !== day) {
-        location.reload()
-        return
-      }
-      timeTravel = false
-      clock.paused = false
-      clock.jump(nowSvc.sec)
-      syncHash()
-    },
+    () => goNow(),
     {
       onSpeedChange: () => syncHash(),
       onJump: () => {
@@ -227,6 +220,22 @@ async function boot() {
       },
     },
   )
+
+  // 回到即時：現在時刻＋1×＋播放，一鍵完整還原
+  const btnNowEl = document.getElementById('btnNow')!
+  function goNow() {
+    const nowSvc = serviceToday()
+    if (nowSvc.day !== day) {
+      location.reload() // 跨營運日：重載換班表
+      return
+    }
+    timeTravel = false
+    clock.paused = false
+    ui.setSpeed(1)
+    ui.syncPlay()
+    clock.jump(nowSvc.sec)
+    syncHash()
+  }
 
   // 還原深連結狀態
   {
@@ -258,7 +267,6 @@ async function boot() {
   // ---- 即時校正輪詢（僅「現在模式」：非時間旅行、1×、未暫停）----
   const liveBadge = document.getElementById('liveBadge')!
   const alertBanner = document.getElementById('alertBanner')!
-  const nowMode = () => !timeTravel && clock.speed === 1 && !clock.paused
 
   async function pollLive() {
     if (!nowMode() || document.hidden) return
@@ -311,6 +319,7 @@ async function boot() {
     const applyCal = nowMode() && calib.active
     liveBadge.textContent = applyCal ? '即時⚡' : '表定'
     liveBadge.classList.toggle('on', applyCal)
+    btnNowEl.classList.toggle('attention', !nowMode()) // 偏離即時→亮起指路
     const active = sched.activeAt(t)
     const items: DrawItem[] = []
     let selectedAlive = false
