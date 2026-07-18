@@ -1,0 +1,20 @@
+{
+  "name": "jiezou",
+  "private": true,
+  "type": "module",
+  "workspaces": ["web", "pipeline"],
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "auth-check": "tsx pipeline/auth-check.ts",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.8.0"
+  }
+}
