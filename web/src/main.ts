@@ -1,7 +1,7 @@
 import './style.css'
 
 // 版本戳記：字母序遞增，顯示於畫面與 console 供比對線上版本
-export const BUILD = 'M0a-20260718'
+export const BUILD = 'M0b-20260718'
 
 const status = document.getElementById('status')!
 status.textContent = `BUILD ${BUILD}`
