@@ -18,11 +18,11 @@
 
 ## 2. 工作項目（Do）
 
-- [ ] T5.4 每日資料 CI：`.github/workflows/daily-data.yml`（04:10 台北）＋repo secrets（TDX 金鑰）＋變更偵測 commit
-- [ ] T5.3 外觀三段切換（自動／亮／暗）：UI 鈕＋localStorage＋底圖磚切換
-- [ ] T5.2 行動打磨：iOS 安全區（safe-area-inset）、時間列手機寬度
-- [ ] T5.5 發佈配件：OG meta＋favicon＋關於面板（資料來源／免責／GitHub 連結）
-- [ ] T5.1 尖峰效能：時間旅行至平日 08:30（151 班）實測 fps
+- [ ] T5.4 每日資料 CI：workflow 已就緒（2026-07-18）；**repo secrets 待用戶設定**（權限分類器擋下代設——正確的保守，金鑰操作應由本人執行）；設定後手動觸發驗證
+- [x] T5.3 外觀三段切換（2026-07-18：◐/🌙/☀️ 循環、localStorage 記憶、底圖磚＋站點樣式即時切換、深色實測）
+- [x] T5.2 行動打磨（2026-07-18：timebar／backBtn 加 safe-area-inset-bottom）
+- [x] T5.5 發佈配件（2026-07-18：OG meta、favicon.svg（捷字）、關於面板含版本／資料來源／免責／MIT）
+- [x] T5.1 尖峰效能（2026-07-18：`?day=weekday` 時間旅行至 08:30——**149 班 61fps**，門檻 55；「1fps」為背景分頁 rAF 節流的假警報，已記錄）
 - [ ] T5.6 Beta 走查：PRD §7 成功指標逐項核對；repo 轉 Public（經用戶最後確認）
 
 ## 3. Verify — 技術驗證
