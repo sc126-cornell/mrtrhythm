@@ -17,9 +17,9 @@
 
 ## 2. 工作項目（Do）
 
-- [ ] T0.1 👤 **用戶本人**：至 tdx.transportdata.tw 註冊會員、建立 API 金鑰（client id/secret），提供後我寫入本地 `.env`（不進 git）
+- [x] T0.1 👤 **用戶本人**：至 tdx.transportdata.tw 註冊會員、建立 API 金鑰（client id/secret），提供後我寫入本地 `.env`（不進 git）（2026-07-18 完成：金鑰生效延遲約 1.5 分鐘後 `auth-check` ✅，token 效期 24h）
 - [x] T0.2 Repo 初始化：monorepo 結構、Vite＋TS、ESLint/Prettier、MIT LICENSE、`.gitignore`、接上 GitHub remote（2026-07-18 完成：initial commit 已推上 main；`npm run build` 129ms 通過；`auth-check` 缺金鑰時友善提示；Dropbox 已忽略 node_modules/dist）
-- [ ] T0.3 TDX API Spike：9 端點實測（SDD §3.2 清單）、樣本存 `pipeline/samples/`、發現寫入 `SPIKE-NOTES.md`
+- [x] T0.3 TDX API Spike：9 端點實測（SDD §3.2 清單）、樣本存 `pipeline/samples/`、發現寫入 `SPIKE-NOTES.md`（2026-07-18 完成：9/9 端點成功；四大未知數全數解答；發現 RouteID＝交路、LiveBoard 為事件式；SDD §3.3/§4.3/§6/§8 已修訂、schema 凍結；詳見 [pipeline/SPIKE-NOTES.md](../pipeline/SPIKE-NOTES.md)）
 - [ ] T0.4 Vercel 接線：建立 Vercel 專案、連 repo、設 TDX 環境變數、`/api/health` 部署跑通
 
 ## 3. Verify — 技術驗證（對照 SDD）

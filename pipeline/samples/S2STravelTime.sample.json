@@ -1,0 +1,1239 @@
+{
+  "fetchedAt": "2026-07-18T13:36:21.297Z",
+  "url": "https://tdx.transportdata.tw/api/basic/v2/Rail/Metro/S2STravelTime/TRTC?%24top=1000000&%24format=JSON",
+  "data": {
+    "__totalCount": 11,
+    "__sample": [
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "RouteID": "BL-1",
+        "TrainType": 1,
+        "TravelTimes": [
+          {
+            "Sequence": 1,
+            "FromStationID": "BL23",
+            "FromStationName": {
+              "Zh_tw": "南港展覽館",
+              "En": "Taipei Nangang Exhibition Center",
+              "Ja": "南港展覧館",
+              "Ko": "난강 전람관"
+            },
+            "ToStationID": "BL22",
+            "ToStationName": {
+              "Zh_tw": "南港",
+              "En": "Nangang",
+              "Ja": "南港",
+              "Ko": "난강"
+            },
+            "RunTime": 112,
+            "StopTime": 0
+          },
+          {
+            "Sequence": 2,
+            "FromStationID": "BL22",
+            "FromStationName": {
+              "Zh_tw": "南港",
+              "En": "Nangang",
+              "Ja": "南港",
+              "Ko": "난강"
+            },
+            "ToStationID": "BL21",
+            "ToStationName": {
+              "Zh_tw": "昆陽",
+              "En": "Kunyang",
+              "Ja": "昆陽",
+              "Ko": "쿤양"
+            },
+            "RunTime": 109,
+            "StopTime": 24
+          },
+          {
+            "Sequence": 3,
+            "FromStationID": "BL21",
+            "FromStationName": {
+              "Zh_tw": "昆陽",
+              "En": "Kunyang",
+              "Ja": "昆陽",
+              "Ko": "쿤양"
+            },
+            "ToStationID": "BL20",
+            "ToStationName": {
+              "Zh_tw": "後山埤",
+              "En": "Houshanpi",
+              "Ja": "後山埤",
+              "Ko": "허우산피"
+            },
+            "RunTime": 107,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 4,
+            "FromStationID": "BL20",
+            "FromStationName": {
+              "Zh_tw": "後山埤",
+              "En": "Houshanpi",
+              "Ja": "後山埤",
+              "Ko": "허우산피"
+            },
+            "ToStationID": "BL19",
+            "ToStationName": {
+              "Zh_tw": "永春",
+              "En": "Yongchun",
+              "Ja": "永春",
+              "Ko": "융춘"
+            },
+            "RunTime": 76,
+            "StopTime": 29
+          },
+          {
+            "Sequence": 5,
+            "FromStationID": "BL19",
+            "FromStationName": {
+              "Zh_tw": "永春",
+              "En": "Yongchun",
+              "Ja": "永春",
+              "Ko": "융춘"
+            },
+            "ToStationID": "BL18",
+            "ToStationName": {
+              "Zh_tw": "市政府",
+              "En": "Taipei City Hall",
+              "Ja": "台北市政府",
+              "Ko": "타이베이 시청"
+            },
+            "RunTime": 87,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 6,
+            "FromStationID": "BL18",
+            "FromStationName": {
+              "Zh_tw": "市政府",
+              "En": "Taipei City Hall",
+              "Ja": "台北市政府",
+              "Ko": "타이베이 시청"
+            },
+            "ToStationID": "BL17",
+            "ToStationName": {
+              "Zh_tw": "國父紀念館",
+              "En": "Sun Yat-Sen Memorial Hall",
+              "Ja": "国父紀念館",
+              "Ko": "국부 기념관"
+            },
+            "RunTime": 77,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 7,
+            "FromStationID": "BL17",
+            "FromStationName": {
+              "Zh_tw": "國父紀念館",
+              "En": "Sun Yat-Sen Memorial Hall",
+              "Ja": "国父紀念館",
+              "Ko": "국부 기념관"
+            },
+            "ToStationID": "BL16",
+            "ToStationName": {
+              "Zh_tw": "忠孝敦化",
+              "En": "Zhongxiao Dunhua",
+              "Ja": "忠孝敦化",
+              "Ko": "중샤오 둔화"
+            },
+            "RunTime": 71,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 8,
+            "FromStationID": "BL16",
+            "FromStationName": {
+              "Zh_tw": "忠孝敦化",
+              "En": "Zhongxiao Dunhua",
+              "Ja": "忠孝敦化",
+              "Ko": "중샤오 둔화"
+            },
+            "ToStationID": "BL15",
+            "ToStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "RunTime": 65,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 9,
+            "FromStationID": "BL15",
+            "FromStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "ToStationID": "BL14",
+            "ToStationName": {
+              "Zh_tw": "忠孝新生",
+              "En": "Zhongxiao Xinsheng",
+              "Ja": "忠孝新生",
+              "Ko": "중샤오 신성"
+            },
+            "RunTime": 90,
+            "StopTime": 40
+          },
+          {
+            "Sequence": 10,
+            "FromStationID": "BL14",
+            "FromStationName": {
+              "Zh_tw": "忠孝新生",
+              "En": "Zhongxiao Xinsheng",
+              "Ja": "忠孝新生",
+              "Ko": "중샤오 신성"
+            },
+            "ToStationID": "BL13",
+            "ToStationName": {
+              "Zh_tw": "善導寺",
+              "En": "Shandao Temple",
+              "Ja": "善導寺",
+              "Ko": "산다오사"
+            },
+            "RunTime": 81,
+            "StopTime": 40
+          },
+          {
+            "Sequence": 11,
+            "FromStationID": "BL13",
+            "FromStationName": {
+              "Zh_tw": "善導寺",
+              "En": "Shandao Temple",
+              "Ja": "善導寺",
+              "Ko": "산다오사"
+            },
+            "ToStationID": "BL12",
+            "ToStationName": {
+              "Zh_tw": "台北車站",
+              "En": "Taipei Main Station",
+              "Ja": "台北駅",
+              "Ko": "타이베이 역"
+            },
+            "RunTime": 66,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 12,
+            "FromStationID": "BL12",
+            "FromStationName": {
+              "Zh_tw": "台北車站",
+              "En": "Taipei Main Station",
+              "Ja": "台北駅",
+              "Ko": "타이베이 역"
+            },
+            "ToStationID": "BL11",
+            "ToStationName": {
+              "Zh_tw": "西門",
+              "En": "Ximen",
+              "Ja": "西門",
+              "Ko": "시먼"
+            },
+            "RunTime": 120,
+            "StopTime": 42
+          },
+          {
+            "Sequence": 13,
+            "FromStationID": "BL11",
+            "FromStationName": {
+              "Zh_tw": "西門",
+              "En": "Ximen",
+              "Ja": "西門",
+              "Ko": "시먼"
+            },
+            "ToStationID": "BL10",
+            "ToStationName": {
+              "Zh_tw": "龍山寺",
+              "En": "Longshan Temple",
+              "Ja": "龍山寺",
+              "Ko": "용산사"
+            },
+            "RunTime": 110,
+            "StopTime": 35
+          },
+          {
+            "Sequence": 14,
+            "FromStationID": "BL10",
+            "FromStationName": {
+              "Zh_tw": "龍山寺",
+              "En": "Longshan Temple",
+              "Ja": "龍山寺",
+              "Ko": "용산사"
+            },
+            "ToStationID": "BL09",
+            "ToStationName": {
+              "Zh_tw": "江子翠",
+              "En": "Jiangzicui",
+              "Ja": "江子翠",
+              "Ko": "장쯔추이"
+            },
+            "RunTime": 192,
+            "StopTime": 29
+          },
+          {
+            "Sequence": 15,
+            "FromStationID": "BL09",
+            "FromStationName": {
+              "Zh_tw": "江子翠",
+              "En": "Jiangzicui",
+              "Ja": "江子翠",
+              "Ko": "장쯔추이"
+            },
+            "ToStationID": "BL08",
+            "ToStationName": {
+              "Zh_tw": "新埔",
+              "En": "Xinpu",
+              "Ja": "新埔",
+              "Ko": "신푸"
+            },
+            "RunTime": 77,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 16,
+            "FromStationID": "BL08",
+            "FromStationName": {
+              "Zh_tw": "新埔",
+              "En": "Xinpu",
+              "Ja": "新埔",
+              "Ko": "신푸"
+            },
+            "ToStationID": "BL07",
+            "ToStationName": {
+              "Zh_tw": "板橋",
+              "En": "Banqiao",
+              "Ja": "板橋",
+              "Ko": "반차오"
+            },
+            "RunTime": 107,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 17,
+            "FromStationID": "BL07",
+            "FromStationName": {
+              "Zh_tw": "板橋",
+              "En": "Banqiao",
+              "Ja": "板橋",
+              "Ko": "반차오"
+            },
+            "ToStationID": "BL06",
+            "ToStationName": {
+              "Zh_tw": "府中",
+              "En": "Fuzhong",
+              "Ja": "府中",
+              "Ko": "푸중"
+            },
+            "RunTime": 67,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 18,
+            "FromStationID": "BL06",
+            "FromStationName": {
+              "Zh_tw": "府中",
+              "En": "Fuzhong",
+              "Ja": "府中",
+              "Ko": "푸중"
+            },
+            "ToStationID": "BL05",
+            "ToStationName": {
+              "Zh_tw": "亞東醫院",
+              "En": "Far Eastern Hospital",
+              "Ja": "亜東病院",
+              "Ko": "야둥 병원"
+            },
+            "RunTime": 102,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 19,
+            "FromStationID": "BL05",
+            "FromStationName": {
+              "Zh_tw": "亞東醫院",
+              "En": "Far Eastern Hospital",
+              "Ja": "亜東病院",
+              "Ko": "야둥 병원"
+            },
+            "ToStationID": "BL04",
+            "ToStationName": {
+              "Zh_tw": "海山",
+              "En": "Haishan",
+              "Ja": "海山",
+              "Ko": "하이산"
+            },
+            "RunTime": 142,
+            "StopTime": 26
+          },
+          {
+            "Sequence": 20,
+            "FromStationID": "BL04",
+            "FromStationName": {
+              "Zh_tw": "海山",
+              "En": "Haishan",
+              "Ja": "海山",
+              "Ko": "하이산"
+            },
+            "ToStationID": "BL03",
+            "ToStationName": {
+              "Zh_tw": "土城",
+              "En": "Tucheng",
+              "Ja": "土城",
+              "Ko": "투청"
+            },
+            "RunTime": 106,
+            "StopTime": 26
+          },
+          {
+            "Sequence": 21,
+            "FromStationID": "BL03",
+            "FromStationName": {
+              "Zh_tw": "土城",
+              "En": "Tucheng",
+              "Ja": "土城",
+              "Ko": "투청"
+            },
+            "ToStationID": "BL02",
+            "ToStationName": {
+              "Zh_tw": "永寧",
+              "En": "Yongning",
+              "Ja": "永寧",
+              "Ko": "융닝"
+            },
+            "RunTime": 95,
+            "StopTime": 26
+          },
+          {
+            "Sequence": 22,
+            "FromStationID": "BL02",
+            "FromStationName": {
+              "Zh_tw": "永寧",
+              "En": "Yongning",
+              "Ja": "永寧",
+              "Ko": "융닝"
+            },
+            "ToStationID": "BL01",
+            "ToStationName": {
+              "Zh_tw": "頂埔",
+              "En": "Dingpu",
+              "Ja": "頂埔",
+              "Ko": "딩푸"
+            },
+            "RunTime": 180,
+            "StopTime": 28
+          }
+        ],
+        "SrcUpdateTime": "2020-01-31T14:00:00+08:00",
+        "UpdateTime": "2020-05-20T12:00:00+08:00",
+        "VersionID": 2
+      },
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "RouteID": "BL-2",
+        "TrainType": 1,
+        "TravelTimes": [
+          {
+            "Sequence": 1,
+            "FromStationID": "BL23",
+            "FromStationName": {
+              "Zh_tw": "南港展覽館",
+              "En": "Taipei Nangang Exhibition Center",
+              "Ja": "南港展覧館",
+              "Ko": "난강 전람관"
+            },
+            "ToStationID": "BL22",
+            "ToStationName": {
+              "Zh_tw": "南港",
+              "En": "Nangang",
+              "Ja": "南港",
+              "Ko": "난강"
+            },
+            "RunTime": 112,
+            "StopTime": 0
+          },
+          {
+            "Sequence": 2,
+            "FromStationID": "BL22",
+            "FromStationName": {
+              "Zh_tw": "南港",
+              "En": "Nangang",
+              "Ja": "南港",
+              "Ko": "난강"
+            },
+            "ToStationID": "BL21",
+            "ToStationName": {
+              "Zh_tw": "昆陽",
+              "En": "Kunyang",
+              "Ja": "昆陽",
+              "Ko": "쿤양"
+            },
+            "RunTime": 109,
+            "StopTime": 24
+          },
+          {
+            "Sequence": 3,
+            "FromStationID": "BL21",
+            "FromStationName": {
+              "Zh_tw": "昆陽",
+              "En": "Kunyang",
+              "Ja": "昆陽",
+              "Ko": "쿤양"
+            },
+            "ToStationID": "BL20",
+            "ToStationName": {
+              "Zh_tw": "後山埤",
+              "En": "Houshanpi",
+              "Ja": "後山埤",
+              "Ko": "허우산피"
+            },
+            "RunTime": 107,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 4,
+            "FromStationID": "BL20",
+            "FromStationName": {
+              "Zh_tw": "後山埤",
+              "En": "Houshanpi",
+              "Ja": "後山埤",
+              "Ko": "허우산피"
+            },
+            "ToStationID": "BL19",
+            "ToStationName": {
+              "Zh_tw": "永春",
+              "En": "Yongchun",
+              "Ja": "永春",
+              "Ko": "융춘"
+            },
+            "RunTime": 76,
+            "StopTime": 29
+          },
+          {
+            "Sequence": 5,
+            "FromStationID": "BL19",
+            "FromStationName": {
+              "Zh_tw": "永春",
+              "En": "Yongchun",
+              "Ja": "永春",
+              "Ko": "융춘"
+            },
+            "ToStationID": "BL18",
+            "ToStationName": {
+              "Zh_tw": "市政府",
+              "En": "Taipei City Hall",
+              "Ja": "台北市政府",
+              "Ko": "타이베이 시청"
+            },
+            "RunTime": 87,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 6,
+            "FromStationID": "BL18",
+            "FromStationName": {
+              "Zh_tw": "市政府",
+              "En": "Taipei City Hall",
+              "Ja": "台北市政府",
+              "Ko": "타이베이 시청"
+            },
+            "ToStationID": "BL17",
+            "ToStationName": {
+              "Zh_tw": "國父紀念館",
+              "En": "Sun Yat-Sen Memorial Hall",
+              "Ja": "国父紀念館",
+              "Ko": "국부 기념관"
+            },
+            "RunTime": 77,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 7,
+            "FromStationID": "BL17",
+            "FromStationName": {
+              "Zh_tw": "國父紀念館",
+              "En": "Sun Yat-Sen Memorial Hall",
+              "Ja": "国父紀念館",
+              "Ko": "국부 기념관"
+            },
+            "ToStationID": "BL16",
+            "ToStationName": {
+              "Zh_tw": "忠孝敦化",
+              "En": "Zhongxiao Dunhua",
+              "Ja": "忠孝敦化",
+              "Ko": "중샤오 둔화"
+            },
+            "RunTime": 71,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 8,
+            "FromStationID": "BL16",
+            "FromStationName": {
+              "Zh_tw": "忠孝敦化",
+              "En": "Zhongxiao Dunhua",
+              "Ja": "忠孝敦化",
+              "Ko": "중샤오 둔화"
+            },
+            "ToStationID": "BL15",
+            "ToStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "RunTime": 65,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 9,
+            "FromStationID": "BL15",
+            "FromStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "ToStationID": "BL14",
+            "ToStationName": {
+              "Zh_tw": "忠孝新生",
+              "En": "Zhongxiao Xinsheng",
+              "Ja": "忠孝新生",
+              "Ko": "중샤오 신성"
+            },
+            "RunTime": 90,
+            "StopTime": 40
+          },
+          {
+            "Sequence": 10,
+            "FromStationID": "BL14",
+            "FromStationName": {
+              "Zh_tw": "忠孝新生",
+              "En": "Zhongxiao Xinsheng",
+              "Ja": "忠孝新生",
+              "Ko": "중샤오 신성"
+            },
+            "ToStationID": "BL13",
+            "ToStationName": {
+              "Zh_tw": "善導寺",
+              "En": "Shandao Temple",
+              "Ja": "善導寺",
+              "Ko": "산다오사"
+            },
+            "RunTime": 81,
+            "StopTime": 40
+          },
+          {
+            "Sequence": 11,
+            "FromStationID": "BL13",
+            "FromStationName": {
+              "Zh_tw": "善導寺",
+              "En": "Shandao Temple",
+              "Ja": "善導寺",
+              "Ko": "산다오사"
+            },
+            "ToStationID": "BL12",
+            "ToStationName": {
+              "Zh_tw": "台北車站",
+              "En": "Taipei Main Station",
+              "Ja": "台北駅",
+              "Ko": "타이베이 역"
+            },
+            "RunTime": 66,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 12,
+            "FromStationID": "BL12",
+            "FromStationName": {
+              "Zh_tw": "台北車站",
+              "En": "Taipei Main Station",
+              "Ja": "台北駅",
+              "Ko": "타이베이 역"
+            },
+            "ToStationID": "BL11",
+            "ToStationName": {
+              "Zh_tw": "西門",
+              "En": "Ximen",
+              "Ja": "西門",
+              "Ko": "시먼"
+            },
+            "RunTime": 120,
+            "StopTime": 42
+          },
+          {
+            "Sequence": 13,
+            "FromStationID": "BL11",
+            "FromStationName": {
+              "Zh_tw": "西門",
+              "En": "Ximen",
+              "Ja": "西門",
+              "Ko": "시먼"
+            },
+            "ToStationID": "BL10",
+            "ToStationName": {
+              "Zh_tw": "龍山寺",
+              "En": "Longshan Temple",
+              "Ja": "龍山寺",
+              "Ko": "용산사"
+            },
+            "RunTime": 110,
+            "StopTime": 35
+          },
+          {
+            "Sequence": 14,
+            "FromStationID": "BL10",
+            "FromStationName": {
+              "Zh_tw": "龍山寺",
+              "En": "Longshan Temple",
+              "Ja": "龍山寺",
+              "Ko": "용산사"
+            },
+            "ToStationID": "BL09",
+            "ToStationName": {
+              "Zh_tw": "江子翠",
+              "En": "Jiangzicui",
+              "Ja": "江子翠",
+              "Ko": "장쯔추이"
+            },
+            "RunTime": 192,
+            "StopTime": 29
+          },
+          {
+            "Sequence": 15,
+            "FromStationID": "BL09",
+            "FromStationName": {
+              "Zh_tw": "江子翠",
+              "En": "Jiangzicui",
+              "Ja": "江子翠",
+              "Ko": "장쯔추이"
+            },
+            "ToStationID": "BL08",
+            "ToStationName": {
+              "Zh_tw": "新埔",
+              "En": "Xinpu",
+              "Ja": "新埔",
+              "Ko": "신푸"
+            },
+            "RunTime": 77,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 16,
+            "FromStationID": "BL08",
+            "FromStationName": {
+              "Zh_tw": "新埔",
+              "En": "Xinpu",
+              "Ja": "新埔",
+              "Ko": "신푸"
+            },
+            "ToStationID": "BL07",
+            "ToStationName": {
+              "Zh_tw": "板橋",
+              "En": "Banqiao",
+              "Ja": "板橋",
+              "Ko": "반차오"
+            },
+            "RunTime": 107,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 17,
+            "FromStationID": "BL07",
+            "FromStationName": {
+              "Zh_tw": "板橋",
+              "En": "Banqiao",
+              "Ja": "板橋",
+              "Ko": "반차오"
+            },
+            "ToStationID": "BL06",
+            "ToStationName": {
+              "Zh_tw": "府中",
+              "En": "Fuzhong",
+              "Ja": "府中",
+              "Ko": "푸중"
+            },
+            "RunTime": 67,
+            "StopTime": 28
+          },
+          {
+            "Sequence": 18,
+            "FromStationID": "BL06",
+            "FromStationName": {
+              "Zh_tw": "府中",
+              "En": "Fuzhong",
+              "Ja": "府中",
+              "Ko": "푸중"
+            },
+            "ToStationID": "BL05",
+            "ToStationName": {
+              "Zh_tw": "亞東醫院",
+              "En": "Far Eastern Hospital",
+              "Ja": "亜東病院",
+              "Ko": "야둥 병원"
+            },
+            "RunTime": 102,
+            "StopTime": 28
+          }
+        ],
+        "SrcUpdateTime": "2020-01-31T14:00:00+08:00",
+        "UpdateTime": "2020-05-20T12:00:00+08:00",
+        "VersionID": 2
+      },
+      {
+        "LineNo": "BR",
+        "LineID": "BR",
+        "RouteID": "BR-1",
+        "TrainType": 1,
+        "TravelTimes": [
+          {
+            "Sequence": 1,
+            "FromStationID": "BR24",
+            "FromStationName": {
+              "Zh_tw": "南港展覽館",
+              "En": "Taipei Nangang Exhibition Center",
+              "Ja": "南港展覧館",
+              "Ko": "난강 전람관"
+            },
+            "ToStationID": "BR23",
+            "ToStationName": {
+              "Zh_tw": "南港軟體園區",
+              "En": "Nangang Software Park",
+              "Ja": "南港ソフトウェアパーク",
+              "Ko": "난강 소프트웨어 단지"
+            },
+            "RunTime": 78,
+            "StopTime": 0
+          },
+          {
+            "Sequence": 2,
+            "FromStationID": "BR23",
+            "FromStationName": {
+              "Zh_tw": "南港軟體園區",
+              "En": "Nangang Software Park",
+              "Ja": "南港ソフトウェアパーク",
+              "Ko": "난강 소프트웨어 단지"
+            },
+            "ToStationID": "BR22",
+            "ToStationName": {
+              "Zh_tw": "東湖",
+              "En": "Donghu",
+              "Ja": "東湖",
+              "Ko": "둥후"
+            },
+            "RunTime": 85,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 3,
+            "FromStationID": "BR22",
+            "FromStationName": {
+              "Zh_tw": "東湖",
+              "En": "Donghu",
+              "Ja": "東湖",
+              "Ko": "둥후"
+            },
+            "ToStationID": "BR21",
+            "ToStationName": {
+              "Zh_tw": "葫洲",
+              "En": "Huzhou",
+              "Ja": "葫洲",
+              "Ko": "후저우"
+            },
+            "RunTime": 78,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 4,
+            "FromStationID": "BR21",
+            "FromStationName": {
+              "Zh_tw": "葫洲",
+              "En": "Huzhou",
+              "Ja": "葫洲",
+              "Ko": "후저우"
+            },
+            "ToStationID": "BR20",
+            "ToStationName": {
+              "Zh_tw": "大湖公園",
+              "En": "Dahu Park",
+              "Ja": "大湖公園",
+              "Ko": "다후 공원"
+            },
+            "RunTime": 121,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 5,
+            "FromStationID": "BR20",
+            "FromStationName": {
+              "Zh_tw": "大湖公園",
+              "En": "Dahu Park",
+              "Ja": "大湖公園",
+              "Ko": "다후 공원"
+            },
+            "ToStationID": "BR19",
+            "ToStationName": {
+              "Zh_tw": "內湖",
+              "En": "Neihu",
+              "Ja": "内湖",
+              "Ko": "네이후"
+            },
+            "RunTime": 71,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 6,
+            "FromStationID": "BR19",
+            "FromStationName": {
+              "Zh_tw": "內湖",
+              "En": "Neihu",
+              "Ja": "内湖",
+              "Ko": "네이후"
+            },
+            "ToStationID": "BR18",
+            "ToStationName": {
+              "Zh_tw": "文德",
+              "En": "Wende",
+              "Ja": "文徳",
+              "Ko": "원더"
+            },
+            "RunTime": 78,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 7,
+            "FromStationID": "BR18",
+            "FromStationName": {
+              "Zh_tw": "文德",
+              "En": "Wende",
+              "Ja": "文徳",
+              "Ko": "원더"
+            },
+            "ToStationID": "BR17",
+            "ToStationName": {
+              "Zh_tw": "港墘",
+              "En": "Gangqian",
+              "Ja": "港墘",
+              "Ko": "강첸"
+            },
+            "RunTime": 72,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 8,
+            "FromStationID": "BR17",
+            "FromStationName": {
+              "Zh_tw": "港墘",
+              "En": "Gangqian",
+              "Ja": "港墘",
+              "Ko": "강첸"
+            },
+            "ToStationID": "BR16",
+            "ToStationName": {
+              "Zh_tw": "西湖",
+              "En": "Xihu",
+              "Ja": "西湖",
+              "Ko": "시후"
+            },
+            "RunTime": 65,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 9,
+            "FromStationID": "BR16",
+            "FromStationName": {
+              "Zh_tw": "西湖",
+              "En": "Xihu",
+              "Ja": "西湖",
+              "Ko": "시후"
+            },
+            "ToStationID": "BR15",
+            "ToStationName": {
+              "Zh_tw": "劍南路",
+              "En": "Jiannan Rd.",
+              "Ja": "剣南路",
+              "Ko": "젠난루"
+            },
+            "RunTime": 110,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 10,
+            "FromStationID": "BR15",
+            "FromStationName": {
+              "Zh_tw": "劍南路",
+              "En": "Jiannan Rd.",
+              "Ja": "剣南路",
+              "Ko": "젠난루"
+            },
+            "ToStationID": "BR14",
+            "ToStationName": {
+              "Zh_tw": "大直",
+              "En": "Dazhi",
+              "Ja": "大直",
+              "Ko": "다즈"
+            },
+            "RunTime": 103,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 11,
+            "FromStationID": "BR14",
+            "FromStationName": {
+              "Zh_tw": "大直",
+              "En": "Dazhi",
+              "Ja": "大直",
+              "Ko": "다즈"
+            },
+            "ToStationID": "BR13",
+            "ToStationName": {
+              "Zh_tw": "松山機場",
+              "En": "Songshan Airport",
+              "Ja": "松山空港",
+              "Ko": "송산공항"
+            },
+            "RunTime": 172,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 12,
+            "FromStationID": "BR13",
+            "FromStationName": {
+              "Zh_tw": "松山機場",
+              "En": "Songshan Airport",
+              "Ja": "松山空港",
+              "Ko": "송산공항"
+            },
+            "ToStationID": "BR12",
+            "ToStationName": {
+              "Zh_tw": "中山國中",
+              "En": "Zhongshan Junior High School",
+              "Ja": "中山中学校",
+              "Ko": "중산 중학교"
+            },
+            "RunTime": 142,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 13,
+            "FromStationID": "BR12",
+            "FromStationName": {
+              "Zh_tw": "中山國中",
+              "En": "Zhongshan Junior High School",
+              "Ja": "中山中学校",
+              "Ko": "중산 중학교"
+            },
+            "ToStationID": "BR11",
+            "ToStationName": {
+              "Zh_tw": "南京復興",
+              "En": "Nanjing Fuxing",
+              "Ja": "南京復興",
+              "Ko": "난징 푸싱"
+            },
+            "RunTime": 66,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 14,
+            "FromStationID": "BR11",
+            "FromStationName": {
+              "Zh_tw": "南京復興",
+              "En": "Nanjing Fuxing",
+              "Ja": "南京復興",
+              "Ko": "난징 푸싱"
+            },
+            "ToStationID": "BR10",
+            "ToStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "RunTime": 86,
+            "StopTime": 30
+          },
+          {
+            "Sequence": 15,
+            "FromStationID": "BR10",
+            "FromStationName": {
+              "Zh_tw": "忠孝復興",
+              "En": "Zhongxiao Fuxing",
+              "Ja": "忠孝復興",
+              "Ko": "중샤오 푸싱"
+            },
+            "ToStationID": "BR09",
+            "ToStationName": {
+              "Zh_tw": "大安",
+              "En": "Daan",
+              "Ja": "大安",
+              "Ko": "다안"
+            },
+            "RunTime": 67,
+            "StopTime": 45
+          },
+          {
+            "Sequence": 16,
+            "FromStationID": "BR09",
+            "FromStationName": {
+              "Zh_tw": "大安",
+              "En": "Daan",
+              "Ja": "大安",
+              "Ko": "다안"
+            },
+            "ToStationID": "BR08",
+            "ToStationName": {
+              "Zh_tw": "科技大樓",
+              "En": "Technology Building",
+              "Ja": "テクノロジービル",
+              "Ko": "테크놀로지 빌딩"
+            },
+            "RunTime": 69,
+            "StopTime": 30
+          },
+          {
+            "Sequence": 17,
+            "FromStationID": "BR08",
+            "FromStationName": {
+              "Zh_tw": "科技大樓",
+              "En": "Technology Building",
+              "Ja": "テクノロジービル",
+              "Ko": "테크놀로지 빌딩"
+            },
+            "ToStationID": "BR07",
+            "ToStationName": {
+              "Zh_tw": "六張犁",
+              "En": "Liuzhangli",
+              "Ja": "六張犁",
+              "Ko": "류장리"
+            },
+            "RunTime": 122,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 18,
+            "FromStationID": "BR07",
+            "FromStationName": {
+              "Zh_tw": "六張犁",
+              "En": "Liuzhangli",
+              "Ja": "六張犁",
+              "Ko": "류장리"
+            },
+            "ToStationID": "BR06",
+            "ToStationName": {
+              "Zh_tw": "麟光",
+              "En": "Linguang",
+              "Ja": "麟光",
+              "Ko": "린광"
+            },
+            "RunTime": 72,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 19,
+            "FromStationID": "BR06",
+            "FromStationName": {
+              "Zh_tw": "麟光",
+              "En": "Linguang",
+              "Ja": "麟光",
+              "Ko": "린광"
+            },
+            "ToStationID": "BR05",
+            "ToStationName": {
+              "Zh_tw": "辛亥",
+              "En": "Xinhai",
+              "Ja": "辛亥",
+              "Ko": "신하이"
+            },
+            "RunTime": 124,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 20,
+            "FromStationID": "BR05",
+            "FromStationName": {
+              "Zh_tw": "辛亥",
+              "En": "Xinhai",
+              "Ja": "辛亥",
+              "Ko": "신하이"
+            },
+            "ToStationID": "BR04",
+            "ToStationName": {
+              "Zh_tw": "萬芳醫院",
+              "En": "Wanfang Hospital",
+              "Ja": "万芳病院",
+              "Ko": "완팡 병원"
+            },
+            "RunTime": 106,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 21,
+            "FromStationID": "BR04",
+            "FromStationName": {
+              "Zh_tw": "萬芳醫院",
+              "En": "Wanfang Hospital",
+              "Ja": "万芳病院",
+              "Ko": "완팡 병원"
+            },
+            "ToStationID": "BR03",
+            "ToStationName": {
+              "Zh_tw": "萬芳社區",
+              "En": "Wanfang Community",
+              "Ja": "万芳コミュニティ",
+              "Ko": "완팡 단지"
+            },
+            "RunTime": 99,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 22,
+            "FromStationID": "BR03",
+            "FromStationName": {
+              "Zh_tw": "萬芳社區",
+              "En": "Wanfang Community",
+              "Ja": "万芳コミュニティ",
+              "Ko": "완팡 단지"
+            },
+            "ToStationID": "BR02",
+            "ToStationName": {
+              "Zh_tw": "木柵",
+              "En": "Muzha",
+              "Ja": "木柵",
+              "Ko": "무자"
+            },
+            "RunTime": 47,
+            "StopTime": 25
+          },
+          {
+            "Sequence": 23,
+            "FromStationID": "BR02",
+            "FromStationName": {
+              "Zh_tw": "木柵",
+              "En": "Muzha",
+              "Ja": "木柵",
+              "Ko": "무자"
+            },
+            "ToStationID": "BR01",
+            "ToStationName": {
+              "Zh_tw": "動物園",
+              "En": "Taipei Zoo",
+              "Ja": "動物園",
+              "Ko": "동물원"
+            },
+            "RunTime": 67,
+            "StopTime": 25
+          }
+        ],
+        "SrcUpdateTime": "2020-01-31T14:00:00+08:00",
+        "UpdateTime": "2020-05-20T12:00:00+08:00",
+        "VersionID": 2
+      }
+    ]
+  }
+}

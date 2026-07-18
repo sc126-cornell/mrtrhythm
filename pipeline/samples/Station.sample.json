@@ -1,0 +1,81 @@
+{
+  "fetchedAt": "2026-07-18T13:36:20.081Z",
+  "url": "https://tdx.transportdata.tw/api/basic/v2/Rail/Metro/Station/TRTC?%24top=1000000&%24format=JSON",
+  "data": {
+    "__totalCount": 121,
+    "__sample": [
+      {
+        "StationUID": "TRTC-BL01",
+        "StationID": "BL01",
+        "StationName": {
+          "Zh_tw": "頂埔",
+          "En": "Dingpu",
+          "Ja": "頂埔",
+          "Ko": "딩푸"
+        },
+        "StationAddress": "236040新北市土城區中央路4段51之6號B3",
+        "BikeAllowOnHoliday": true,
+        "SrcUpdateTime": "2023-10-12T00:00:00+08:00",
+        "StationPosition": {
+          "PositionLon": 121.418744,
+          "PositionLat": 24.959351,
+          "GeoHash": "wsqmfzwqv"
+        },
+        "LocationCity": "新北市",
+        "LocationCityCode": "NWT",
+        "LocationTown": "土城區",
+        "LocationTownCode": "65000130",
+        "UpdateTime": "2023-10-17T00:00:00+08:00",
+        "VersionID": 6
+      },
+      {
+        "StationUID": "TRTC-BL02",
+        "StationID": "BL02",
+        "StationName": {
+          "Zh_tw": "永寧",
+          "En": "Yongning",
+          "Ja": "永寧",
+          "Ko": "융닝"
+        },
+        "StationAddress": "236036新北市土城區中央路3段105號B1",
+        "BikeAllowOnHoliday": true,
+        "SrcUpdateTime": "2023-10-12T00:00:00+08:00",
+        "StationPosition": {
+          "PositionLon": 121.43613,
+          "PositionLat": 24.96682,
+          "GeoHash": "wsqq53546"
+        },
+        "LocationCity": "新北市",
+        "LocationCityCode": "NWT",
+        "LocationTown": "土城區",
+        "LocationTownCode": "65000130",
+        "UpdateTime": "2023-10-17T00:00:00+08:00",
+        "VersionID": 6
+      },
+      {
+        "StationUID": "TRTC-BL03",
+        "StationID": "BL03",
+        "StationName": {
+          "Zh_tw": "土城",
+          "En": "Tucheng",
+          "Ja": "土城",
+          "Ko": "투청"
+        },
+        "StationAddress": "236017新北市土城區金城路1段105號B1",
+        "BikeAllowOnHoliday": true,
+        "SrcUpdateTime": "2023-10-12T00:00:00+08:00",
+        "StationPosition": {
+          "PositionLon": 121.44432,
+          "PositionLat": 24.97313,
+          "GeoHash": "wsqq5d1p1"
+        },
+        "LocationCity": "新北市",
+        "LocationCityCode": "NWT",
+        "LocationTown": "土城區",
+        "LocationTownCode": "65000130",
+        "UpdateTime": "2023-10-17T00:00:00+08:00",
+        "VersionID": 6
+      }
+    ]
+  }
+}

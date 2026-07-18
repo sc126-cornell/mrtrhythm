@@ -1,0 +1,114 @@
+{
+  "fetchedAt": "2026-07-18T13:37:05.342Z",
+  "url": "https://tdx.transportdata.tw/api/basic/v2/Rail/Metro/FirstLastTimetable/TRTC?%24top=1000000&%24format=JSON",
+  "data": {
+    "__totalCount": 243,
+    "__sample": [
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "StationID": "BL01",
+        "StationName": {
+          "Zh_tw": "頂埔",
+          "En": "Dingpu",
+          "Ja": "頂埔",
+          "Ko": "딩푸"
+        },
+        "TripHeadSign": "往南港展覽館",
+        "DestinationStaionID": "BL23",
+        "DestinationStationName": {
+          "Zh_tw": "南港展覽館",
+          "En": "Taipei Nangang Exhibition Center",
+          "Ja": "南港展覧館",
+          "Ko": "난강 전람관"
+        },
+        "TrainType": 0,
+        "FirstTrainTime": "06:00",
+        "LastTrainTime": "00:00",
+        "ServiceDay": {
+          "Monday": true,
+          "Tuesday": true,
+          "Wednesday": true,
+          "Thursday": true,
+          "Friday": true,
+          "Saturday": true,
+          "Sunday": true,
+          "NationalHolidays": true
+        },
+        "SrcUpdateTime": "2024-09-13T00:00:00+08:00",
+        "UpdateTime": "2024-10-21T11:02:08+08:00",
+        "VersionID": 3
+      },
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "StationID": "BL02",
+        "StationName": {
+          "Zh_tw": "永寧",
+          "En": "Yongning",
+          "Ja": "永寧",
+          "Ko": "융닝"
+        },
+        "TripHeadSign": "往頂埔",
+        "DestinationStaionID": "BL01",
+        "DestinationStationName": {
+          "Zh_tw": "頂埔",
+          "En": "Dingpu",
+          "Ja": "頂埔",
+          "Ko": "딩푸"
+        },
+        "TrainType": 0,
+        "FirstTrainTime": "06:00",
+        "LastTrainTime": "01:08",
+        "ServiceDay": {
+          "Monday": true,
+          "Tuesday": true,
+          "Wednesday": true,
+          "Thursday": true,
+          "Friday": true,
+          "Saturday": true,
+          "Sunday": true,
+          "NationalHolidays": true
+        },
+        "SrcUpdateTime": "2024-09-13T00:00:00+08:00",
+        "UpdateTime": "2024-10-21T11:02:08+08:00",
+        "VersionID": 3
+      },
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "StationID": "BL02",
+        "StationName": {
+          "Zh_tw": "永寧",
+          "En": "Yongning",
+          "Ja": "永寧",
+          "Ko": "융닝"
+        },
+        "TripHeadSign": "往南港展覽館",
+        "DestinationStaionID": "BL23",
+        "DestinationStationName": {
+          "Zh_tw": "南港展覽館",
+          "En": "Taipei Nangang Exhibition Center",
+          "Ja": "南港展覧館",
+          "Ko": "난강 전람관"
+        },
+        "TrainType": 0,
+        "FirstTrainTime": "06:03",
+        "LastTrainTime": "00:03",
+        "ServiceDay": {
+          "Monday": true,
+          "Tuesday": true,
+          "Wednesday": true,
+          "Thursday": true,
+          "Friday": true,
+          "Saturday": true,
+          "Sunday": true,
+          "NationalHolidays": true
+        },
+        "SrcUpdateTime": "2024-09-13T00:00:00+08:00",
+        "UpdateTime": "2024-10-21T11:02:08+08:00",
+        "VersionID": 3
+      }
+    ]
+  }
+}

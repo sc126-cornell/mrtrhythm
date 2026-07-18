@@ -61,7 +61,7 @@
 
 - OAuth2 client credentials：`POST https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token`
 - `grant_type=client_credentials`，token 有效期約 1 天；金鑰存於 Vercel 環境變數與本地 `.env`（不進 repo）。
-- 免費方案有呼叫頻率限制 → 一切即時呼叫走代理集中快取，額度以 TDX 會員說明為準。
+- 免費方案限流（2026-07-18 實測：連續快發第 6 個請求起 429、等 65s 恢復；15s 間隔穩定）→ 一切即時呼叫走代理集中快取；抓取器一律帶 429 退避。新建金鑰需約 1–3 分鐘生效。
 
 ### 3.2 端點清單（operator = `TRTC`，base = `https://tdx.transportdata.tw/api/basic`）
 
@@ -79,13 +79,15 @@
 
 > ⚠️ M0 的 T0.3 API Spike 會實測每個端點並保存樣本（`pipeline/samples/`），確認欄位、單位（LiveBoard 的 EstimateTime 以秒或分計）、`ServiceDay` 型式後，才凍結本文件第 8 節的 schema。
 
-### 3.3 已知資料特性（設計必須面對）
+### 3.3 已知資料特性（2026-07-18 Spike 實測確認，詳見 [pipeline/SPIKE-NOTES.md](pipeline/SPIKE-NOTES.md)）
 
-- **StationTimeTable 沒有全網一致的車次號** → 需要「串班演算法」把各站時刻串成班次（見 4.3）。
-- **文湖線無逐站時刻表** → 用 FirstLast＋Frequency＋S2S 合成，標記 `synthetic`。
-- 平日／週六／週日（含國定假日）三種班表；國定假日比照假日班表，需對行事曆。
-- 短程區間車存在（如淡水信義線北投—大安），串班需支援「起點不在端點站」。
-- 環狀線屬新北捷運（NTMC），不在 TRTC 資料內——P2 擴充時另接。
+- **RouteID＝營運交路**（全網 11 條，全程／區間／支線各自獨立，例：BL-2 南港展覽館–亞東醫院、R-3 北投–新北投）；S2STravelTime 每筆即一條交路的完整站鏈——串班以（RouteID × Direction）為單位（見 4.3）。
+- **StationTimeTable 無車次號、DepartureTime 為 HH:MM 分鐘精度**；ServiceTag 四種（平日／假日／週六／週日）並存，選表規則＝特定（週六/週日）優先於通用（假日）。
+- **文湖線 BR 無 StationTimeTable** → 用 FirstLast＋Frequency＋S2S 合成並標記 `synthetic`；BR 有出現在 LiveBoard，可靠事件校正。
+- **LiveBoard 為事件式看板**：EstimateTime 恆 0，每筆＝「列車進站中」瞬間事件（存活約等於停站秒數）；源時間戳用 SrcUpdateTime（落後即時約 30s）。
+- **StationOfLine 站序不可當路徑**（支線站折疊在序列尾端：G03A、R22A、O50–O54）；站鏈一律以 S2S 交路為準。
+- Shape 為 MULTILINESTRING（每線 6–13 段，需縫合），另有 EncodedPolyline 欄位備用。
+- 環狀線屬新北捷運（NTMC），不在 TRTC 靜態資料內（LiveBoard 意外含 Y 線事件）——P2 擴充時另接。
 
 ## 4. 資料管線設計（`pipeline/`）
 
@@ -105,22 +107,23 @@ validate.ts ──► 驗證報告（不過門檻則 CI 失敗，保留昨日資
 3. 車站以最近點**投影吸附**到線上，記錄每站里程 `km`；支線（新北投、小碧潭）獨立成線處理，於分歧站共站。
 4. 產出 debug 疊圖頁（本地 HTML）供人工檢查幾何。
 
-### 4.3 build_timetable — 串班演算法（本專案最高技術風險點）
+### 4.3 build_timetable — 串班演算法（Spike 後風險降級：中→低）
 
-輸入：各站各方向的到站時刻序列（無車次號）＋ S2S 站間秒數。
+輸入：StationTimeTable（站×方向×**交路**的發車時刻序列，HH:MM 分鐘精度、無車次號）＋ S2S 交路站鏈與站間秒數。
 
 ```
-for 每條線 × 每方向:
-  以「該方向第一個發車站」的時刻序列為錨（每個時刻 = 一個候選班次）
+for 每條交路 RouteID × 每方向 Direction:      // 全網 11 條交路，站鏈取自 S2S
+  以交路起站的時刻序列為錨（每個時刻 = 一個候選班次）
   for 每個發車時刻 t0:
     trip = [(s0, t0)]; t_expect = t0
-    沿站序推進:
-      t_expect += S2S.RunTime + S2S.StopTime
-      在下一站序列中找 |t - t_expect| ≤ 容差(預設90s) 且未被認領的最近時刻
+    沿交路站鏈推進:
+      t_expect += RunTime + StopTime
+      在下一站（同交路同方向）序列中找 |t - t_expect| ≤ 容差(預設90s) 且未被認領的最近時刻
       找到 → 認領並加入 trip，t_expect 校正為實際值
       找不到 → 以 t_expect 合成該停靠（標記 estimated），繼續
-  端點掃完後，各中途站「未被認領」的剩餘時刻 → 以該站為起點重跑（捕捉區間車）
 ```
+
+區間車與支線本身即獨立交路（BL-2、G-2、G-3、R-2、R-3），無需另行捕捉。
 
 驗收門檻（validate.ts 強制）：
 - 各站時刻**認領率 ≥ 95%**；同一時刻不得被兩班認領。
@@ -164,8 +167,8 @@ state.ts             輕量 pub/sub（無框架）
 
 ## 6. 即時校正設計
 
-- 前端營運時段每 **20s** 呼叫 `/api/live`；回應為各站各方向的下一班倒數。
-- 對每（線, 方向）：取模擬預測 vs 看板倒數的**誤差中位數**（樣本 = 該方向所有有資料的站，剔除 |誤差| > 5min 離群值）。
+- 前端營運時段每 **20s** 呼叫 `/api/live`。LiveBoard 為**事件式**（每筆＝「列車進站中」、EstimateTime 恆 0），回應為近期進站事件（站、終點、SrcUpdateTime）。
+- 對每筆事件：在同交路同方向的模擬列車中，找「預測到站時刻最接近事件時刻」者，誤差＝模擬預測−實際事件；對每（交路, 方向）取**誤差中位數**（剔除 |誤差| > 5min 離群值；事件時間戳用 SrcUpdateTime）。
 - 得到 offset 後**平滑收斂**（每幀移動 10%，上限 ±180s）——避免列車瞬移。
 - 文湖線（synthetic）同樣校正，是拉回精度的主要手段。
 - 看板無資料（收班／異常）→ 停止校正、看板面板顯示對應狀態；`/api/alerts` 顯示告警橫幅。
@@ -175,38 +178,45 @@ state.ts             輕量 pub/sub（無框架）
 
 | 路由 | 上游 | 快取策略 | 回應 |
 |---|---|---|---|
-| `GET /api/live` | Metro LiveBoard/TRTC | `Cache-Control: s-maxage=15, stale-while-revalidate=30`（CDN 層共享） | 瘦身後陣列：`[{sta, line, dir, dest, est}]` |
+| `GET /api/live` | Metro LiveBoard/TRTC | `Cache-Control: s-maxage=15, stale-while-revalidate=30`（CDN 層共享） | 瘦身後事件陣列：`[{sta, dest, srcTime}]` |
 | `GET /api/alerts` | Metro Alert/TRTC | `s-maxage=60` | `[{title, level, time}]` |
 
 - **金鑰不出後端**：TDX client id/secret 存 Vercel env；token 於函式記憶體快取並於過期前刷新（冷啟動時重新換發，可接受）。
 - CDN 共享快取意義：不論多少使用者，TDX 實際被打的頻率 ≈ 每 15s 一次/區域節點，與流量脫鉤。
 - CORS 限定自家網域；上游逾時 3s，失敗回 `503 + Retry-After`，前端靜默退化。
 
-## 8. 資料格式（草案，T0.3 後凍結）
+## 8. 資料格式（2026-07-18 Spike 後凍結）
 
 ```jsonc
-// data/network.json
+// data/network.json —— 交路（route）為一等公民
 {
   "version": "2026-07-18",
   "lines": [{
     "id": "R", "name": "淡水信義線", "color": "#E3002C",   // 官方 CIS 色以管線內建表為準
-    "shape": [[121.5231, 25.0521], ...],                    // [lon, lat]
-    "chainage": [0, 412, ...],                              // 對應 shape 每點累積公尺
-    "stations": [{ "id": "R28", "zh": "淡水", "en": "Tamsui", "km": 0 }, ...]
+    "stations": [{ "id": "R28", "zh": "淡水", "en": "Tamsui", "lonlat": [121.4455, 25.1683] }],
+    "routes": [{
+      "id": "R-1", "kind": "full",                // full | short | branch
+      "stations": ["R28", "R27", ...],             // S2S 站鏈（Direction 0 順序）
+      "runTimes": [148, ...],                      // 站間秒數（長度 = 站數-1）
+      "stopTimes": [30, ...],                      // 各站停靠秒數
+      "shape": [[lon, lat], ...],                  // 縫合後幾何
+      "chainage": [0, 412, ...],                   // shape 每點累積公尺
+      "stationKm": [0, 912, ...]                   // 各站投影在 shape 上的里程（公尺）
+    }]
   }]
 }
 
-// data/tt-weekday.json（sat / sun 同構）
+// data/tt-{weekday|sat|sun}.json
 {
   "serviceDay": "weekday",
   "trips": [{
-    "line": "R", "dir": 0, "synthetic": false,
-    "stops": [{ "s": "R28", "a": 21600, "d": 21630 }, ...]  // 午夜起秒數，跨日 > 86400
-  }]
+    "route": "R-1", "dir": 0, "synthetic": false,
+    "stops": [{ "s": "R28", "d": 21600 }, ...]     // d = 發車秒（午夜起，跨日 > 86400）；分鐘精度
+  }]                                                // 進站時刻由 d − StopTime 反推
 }
 ```
 
-尺寸估算：全網一日 3–4 千班 × 平均 20 站 ≈ 7–8 萬筆停靠 → gzip 後約 400–700KB；超標則按線拆檔延遲載入。
+尺寸估算：平日全網發車時刻實測約 42,000 筆（BL 11,856／G 7,912／O 9,942／R 12,344，另加 BR 合成）→ gzip 後約 300–600KB；超標則按線拆檔延遲載入。
 
 ## 9. 專案結構與部署
 
@@ -240,3 +250,4 @@ state.ts             輕量 pub/sub（無框架）
 - 北捷路線：BR 文湖、R 淡水信義（含新北投支線）、G 松山新店（含小碧潭支線）、O 中和新蘆（蘆洲／迴龍雙尾）、BL 板南。
 - 車站數約 117（不含環狀線）；營運時間約 06:00–24:00。
 - 尖峰同時在線列車估 100–130；高運量尖峰班距 2–4 分、文湖線約 2 分內。
+- 營運交路 11 條（全程／區間／支線），起迄與區間數詳見 [pipeline/SPIKE-NOTES.md](pipeline/SPIKE-NOTES.md) §2。

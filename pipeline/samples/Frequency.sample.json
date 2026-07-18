@@ -1,0 +1,192 @@
+{
+  "fetchedAt": "2026-07-18T13:36:21.632Z",
+  "url": "https://tdx.transportdata.tw/api/basic/v2/Rail/Metro/Frequency/TRTC?%24top=1000000&%24format=JSON",
+  "data": {
+    "__totalCount": 22,
+    "__sample": [
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "RouteID": "BL-1",
+        "TrainType": 0,
+        "ServiceDay": {
+          "ServiceTag": "平日",
+          "Monday": true,
+          "Tuesday": true,
+          "Wednesday": true,
+          "Thursday": true,
+          "Friday": true,
+          "Saturday": false,
+          "Sunday": false,
+          "NationalHolidays": false
+        },
+        "OperationTime": {
+          "StartTime": "06:00",
+          "EndTime": "24:00"
+        },
+        "Headways": [
+          {
+            "PeakFlag": "0",
+            "StartTime": "06:00",
+            "EndTime": "07:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "09:00",
+            "EndTime": "17:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "19:30",
+            "EndTime": "23:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "23:00",
+            "EndTime": "00:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 12
+          },
+          {
+            "PeakFlag": "1",
+            "StartTime": "07:00",
+            "EndTime": "09:00",
+            "MinHeadwayMins": 6,
+            "MaxHeadwayMins": 6
+          },
+          {
+            "PeakFlag": "1",
+            "StartTime": "17:00",
+            "EndTime": "19:30",
+            "MinHeadwayMins": 6,
+            "MaxHeadwayMins": 6
+          }
+        ],
+        "SrcUpdateTime": "2024-10-23T00:00:00+08:00",
+        "UpdateTime": "2024-10-28T16:02:03+08:00",
+        "VersionID": 6
+      },
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "RouteID": "BL-1",
+        "TrainType": 0,
+        "ServiceDay": {
+          "ServiceTag": "假日",
+          "Monday": false,
+          "Tuesday": false,
+          "Wednesday": false,
+          "Thursday": false,
+          "Friday": false,
+          "Saturday": true,
+          "Sunday": true,
+          "NationalHolidays": true
+        },
+        "OperationTime": {
+          "StartTime": "06:00",
+          "EndTime": "24:00"
+        },
+        "Headways": [
+          {
+            "PeakFlag": "0",
+            "StartTime": "06:00",
+            "EndTime": "08:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "08:00",
+            "EndTime": "23:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "23:00",
+            "EndTime": "00:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 12
+          }
+        ],
+        "SrcUpdateTime": "2024-10-23T00:00:00+08:00",
+        "UpdateTime": "2024-10-28T16:02:03+08:00",
+        "VersionID": 6
+      },
+      {
+        "LineNo": "BL",
+        "LineID": "BL",
+        "RouteID": "BL-2",
+        "TrainType": 0,
+        "ServiceDay": {
+          "ServiceTag": "平日",
+          "Monday": true,
+          "Tuesday": true,
+          "Wednesday": true,
+          "Thursday": true,
+          "Friday": true,
+          "Saturday": false,
+          "Sunday": false,
+          "NationalHolidays": false
+        },
+        "OperationTime": {
+          "StartTime": "06:00",
+          "EndTime": "24:00"
+        },
+        "Headways": [
+          {
+            "PeakFlag": "0",
+            "StartTime": "06:00",
+            "EndTime": "07:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "09:00",
+            "EndTime": "17:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "19:30",
+            "EndTime": "23:00",
+            "MinHeadwayMins": 8,
+            "MaxHeadwayMins": 10
+          },
+          {
+            "PeakFlag": "0",
+            "StartTime": "23:00",
+            "EndTime": "00:00",
+            "MinHeadwayMins": 0,
+            "MaxHeadwayMins": 0
+          },
+          {
+            "PeakFlag": "1",
+            "StartTime": "07:00",
+            "EndTime": "09:00",
+            "MinHeadwayMins": 6,
+            "MaxHeadwayMins": 6
+          },
+          {
+            "PeakFlag": "1",
+            "StartTime": "17:00",
+            "EndTime": "19:30",
+            "MinHeadwayMins": 6,
+            "MaxHeadwayMins": 6
+          }
+        ],
+        "SrcUpdateTime": "2024-10-23T00:00:00+08:00",
+        "UpdateTime": "2024-10-28T16:02:03+08:00",
+        "VersionID": 6
+      }
+    ]
+  }
+}
