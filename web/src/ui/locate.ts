@@ -75,6 +75,12 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
     // iOS 13+ 的羅盤權限必須在點擊手勢內請求
     const doe = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<string> }
     if (typeof doe.requestPermission === 'function') {
+      const deferRetry = () => {
+        if (deferToGesture && !retryPending) {
+          retryPending = true
+          window.addEventListener('pointerdown', retryBind, { once: true })
+        }
+      }
       doe
         .requestPermission()
         .then((r) => {
@@ -82,14 +88,13 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
           if (r === 'granted' && watchId !== null) {
             boundEvent = 'deviceorientation'
             window.addEventListener('deviceorientation', onOrient)
+          } else if (r !== 'granted') {
+            // 無手勢的請求可能不 reject 而是 resolve 'denied'（且不彈窗）——
+            // 一律視同失敗，等首次觸碰再試
+            deferRetry()
           }
         })
-        .catch(() => {
-          if (deferToGesture && !retryPending) {
-            retryPending = true
-            window.addEventListener('pointerdown', retryBind, { once: true })
-          }
-        })
+        .catch(deferRetry)
     } else if (hasAbsoluteOrientation) {
       boundEvent = 'deviceorientationabsolute'
       window.addEventListener('deviceorientationabsolute', onOrient as EventListener)
