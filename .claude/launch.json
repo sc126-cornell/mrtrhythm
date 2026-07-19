@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 5173
+    },
+    {
+      "name": "nyc",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "C:\\Users\\scott01\\Dropbox\\PC (2)\\Desktop\\nycrhythm", "run", "dev"],
+      "port": 5173
     }
   ]
 }

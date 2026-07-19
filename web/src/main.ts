@@ -9,11 +9,12 @@ import { initControls } from './ui/controls.ts'
 import { initStationBoard } from './ui/stationboard.ts'
 import { Calibrator, type LiveEvent } from './core/calibrate.ts'
 import { initSearch } from './ui/search.ts'
+import { initLocate } from './ui/locate.ts'
 import { parseHash, writeHash } from './ui/deeplink.ts'
 import { initTheme } from './ui/theme.ts'
 import type { Network, Station, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'M5a-20260718'
+export const BUILD = 'F1-20260719'
 
 // 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
 window.addEventListener('error', (e) => {
@@ -129,6 +130,15 @@ async function boot() {
     board.open(s)
     focusStation(s, 15)
   })
+  // 開站自動定位（與 nycrhythm 同款）——帶深連結參數開站時不搶鏡頭
+  const dlPeek = parseHash()
+  initLocate(
+    map,
+    () => {
+      if (follow === 'lock') setFollow('free')
+    },
+    !dlPeek.c && !dlPeek.s && !dlPeek.f && !dlPeek.t,
+  )
 
   const destName = (trip: Trip) => stations.get(trip.stops[trip.stops.length - 1].s)?.zh ?? '—'
 

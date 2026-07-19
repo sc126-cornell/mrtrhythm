@@ -126,6 +126,68 @@ body {
   color: var(--fg);
 }
 
+/* emoji 字符不吃 color——定位鈕的開關狀態改用灰階表示 */
+#locateBtn {
+  font-size: 16px;
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+#locateBtn.active {
+  filter: none;
+  opacity: 1;
+}
+
+.toast {
+  position: fixed;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1300;
+  background: var(--panel);
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+/* 我的位置：藍點＋朝向光束（JS 旋轉 .me-beam） */
+.me-dot {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1a73e8;
+  border: 2.5px solid #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+.me-beam {
+  position: absolute;
+  left: -48px;
+  top: -48px;
+  width: 96px;
+  height: 96px;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.15s ease-out,
+    opacity 0.4s;
+  /* 60° 楔形、預設朝上（北）；徑向遮罩隨距離淡出 */
+  background: conic-gradient(from -30deg, rgba(26, 115, 232, 0.65) 0deg 60deg, transparent 60deg);
+  -webkit-mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 82%);
+  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 82%);
+}
+
+/* 暗色底圖會吃掉深藍——夜間換亮藍 */
+:root[data-theme='dark'] .me-beam {
+  background: conic-gradient(from -30deg, rgba(110, 168, 255, 0.7) 0deg 60deg, transparent 60deg);
+}
+
 .about {
   position: fixed;
   inset: 0;
