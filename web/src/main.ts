@@ -14,7 +14,7 @@ import { parseHash, writeHash } from './ui/deeplink.ts'
 import { initTheme } from './ui/theme.ts'
 import type { Network, Station, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'F1b-20260720'
+export const BUILD = 'F2-20260720'
 
 // 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
 window.addEventListener('error', (e) => {
@@ -125,6 +125,16 @@ async function boot() {
     () => clock.now(),
     () => syncHash(),
     (trip) => (nowMode() && calib.active ? calib.offsetFor(trip) : 0),
+    (trip) => {
+      // 看板點列＝選取該班次（同點地圖列車）；尚未發車者無位置、靜默略過
+      const g = geo.get(trip.path)
+      const t = clock.now()
+      const st = g ? positionOf(trip, nowMode() && calib.active ? t - calib.offsetFor(trip) : t, g) : null
+      if (!st) return
+      board.close()
+      select(trip, st)
+      map.setView([st.lonlat[1], st.lonlat[0]], Math.max(map.getZoom(), 14))
+    },
   )
   initSearch(stations, (s) => {
     board.open(s)

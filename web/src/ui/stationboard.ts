@@ -20,14 +20,25 @@ export function initStationBoard(
   getTime: () => number,
   onChange: () => void,
   offsetFor: (trip: Trip) => number = () => 0, // 即時校正位移（M4）：實車誤點 → 顯示時刻後移
+  onPick?: (trip: Trip) => void, // 點列＝選取該班次（F2）
 ): StationBoard {
   const el = document.getElementById('stationboard')!
   let current: Station | null = null
   let lastKey = -1
   let sig = ''
+  let lastDeps: Trip[] = [] // 與畫面同步的班次快照，data-i 對回 Trip
 
   el.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('[data-close]')) api.close()
+    const t = e.target as HTMLElement
+    if (t.closest('[data-close]')) {
+      api.close()
+      return
+    }
+    const row = t.closest<HTMLElement>('[data-i]')
+    if (row?.dataset.i !== undefined && onPick) {
+      const trip = lastDeps[Number(row.dataset.i)]
+      if (trip) onPick(trip)
+    }
   })
 
   const etaText = (left: number) => (left < 90 ? '即將發車' : `${Math.floor(left / 60)} 分`)
@@ -36,6 +47,7 @@ export function initStationBoard(
     if (!current) return
     const t = getTime()
     const deps = sched.departuresFrom(current.id, t, 10)
+    lastDeps = deps.map((d) => d.trip)
     const newSig = current.id + '|' + deps.map((d) => d.trip.route + d.d).join(',')
 
     if (newSig === sig) {
@@ -59,7 +71,7 @@ export function initStationBoard(
     if (!deps.length) {
       html += `<div class="sb-empty">今日收班<br><small>拖曳時間軸回營運時段可見班次</small></div>`
     } else {
-      for (const dep of deps) {
+      for (const [i, dep] of deps.entries()) {
         const g = geo.get(dep.trip.path)
         const destId = dep.trip.stops[dep.trip.stops.length - 1].s
         const dest = stations.get(destId)?.zh ?? destId
@@ -67,11 +79,11 @@ export function initStationBoard(
         const left = shown - t
         const syn = dep.trip.synthetic ? '<span class="syn">＊</span>' : ''
         html +=
-          `<div class="sb-row"><span class="dest"><i style="background:${g?.lineColor ?? '#888'}"></i>往 ${dest}${syn}</span>` +
+          `<div class="sb-row" data-i="${i}"><span class="dest"><i style="background:${g?.lineColor ?? '#888'}"></i>往 ${dest}${syn}</span>` +
           `<span class="tm">${fmtTime(shown).slice(0, 5)}</span>` +
           `<span class="eta${left < 90 ? ' soon' : ''}">${etaText(left)}</span></div>`
       }
-      html += `<div class="sb-foot">＊＝班距推算（文湖線）・時刻為表定發車</div>`
+      html += `<div class="sb-foot">＊＝班距推算（文湖線）・點班次＝選取列車</div>`
     }
     el.innerHTML = html
   }

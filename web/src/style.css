@@ -354,6 +354,11 @@ body {
   gap: 8px;
   padding: 5px 0;
   border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.sb-row:active {
+  background: rgba(128, 128, 128, 0.14);
 }
 
 .sb-row:last-of-type {
