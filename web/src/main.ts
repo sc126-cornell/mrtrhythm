@@ -14,7 +14,7 @@ import { parseHash, writeHash } from './ui/deeplink.ts'
 import { initTheme } from './ui/theme.ts'
 import type { Network, Station, TT, Trip } from './core/types.ts'
 
-export const BUILD = 'F2-20260720'
+export const BUILD = 'F2a-20260721'
 
 // 遠端除錯保底：任何未攔截錯誤浮出到徽章（行動裝置無 console 可看）
 window.addEventListener('error', (e) => {

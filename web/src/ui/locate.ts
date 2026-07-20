@@ -27,7 +27,7 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
   let beamEl: HTMLElement | null = null
   let centered = false
   let warned = false
-  let compass = false // 已有羅盤來源在供應方向
+  let lastHeadingAt = 0 // 最近一次羅盤事件的時間戳（ms）——0／過舊＝羅盤靜默
   let shownDeg = 0 // 解纏繞後的累積角度，避免 CSS 轉場繞遠路
   let beamOn = false
   let boundEvent: 'deviceorientation' | 'deviceorientationabsolute' | null = null
@@ -62,9 +62,24 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
       h = 360 - e.alpha + (screen.orientation?.angle ?? 0)
     }
     if (h === null) return
-    compass = true
+    lastHeadingAt = Date.now()
     applyHeading(((h % 360) + 360) % 360)
   }
+
+  // 自癒（實地回報）：分頁進過背景後 iOS 常永久停送 deviceorientation——
+  // 重新註冊監聽器即可復活。羅盤靜默 >10s 時，任何觸碰或切回前景就重綁。
+  const compassStale = () => watchId !== null && boundEvent !== null && Date.now() - lastHeadingAt > 10_000
+  function rebindCompass() {
+    if (!boundEvent) return
+    window.removeEventListener(boundEvent, onOrient as EventListener)
+    window.addEventListener(boundEvent, onOrient as EventListener)
+  }
+  window.addEventListener('pointerdown', () => {
+    if (compassStale()) rebindCompass()
+  })
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && compassStale()) rebindCompass()
+  })
 
   const retryBind = () => {
     retryPending = false
@@ -118,7 +133,7 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
     beamEl = null
     centered = false
     warned = false
-    compass = false
+    lastHeadingAt = 0
     beamOn = false
     shownDeg = 0
     btn.classList.remove('active')
@@ -155,8 +170,8 @@ export function initLocate(map: L.Map, onCenter: () => void, auto = false) {
           ring!.setLatLng([lat, lon])
           ring!.setRadius(accuracy)
         }
-        // 無羅盤（拒絕／不支援）：步行中退回 GPS 行進方向
-        if (!compass && heading !== null && !Number.isNaN(heading) && (speed ?? 0) > 0.5) {
+        // 羅盤靜默（拒絕／不支援／被暫停）：步行中退回 GPS 行進方向
+        if (Date.now() - lastHeadingAt > 10_000 && heading !== null && !Number.isNaN(heading) && (speed ?? 0) > 0.5) {
           applyHeading(heading)
         }
         if (!centered) {
