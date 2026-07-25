@@ -18,6 +18,7 @@ export class TrainsLayer {
   private readonly canvas: HTMLCanvasElement
   private readonly ctx: CanvasRenderingContext2D
   private hits: Array<{ x: number; y: number; st: TrainState }> = []
+  private hitR = 16
 
   constructor(map: L.Map) {
     this.map = map
@@ -45,6 +46,9 @@ export class TrainsLayer {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     ctx.clearRect(0, 0, size.x, size.y)
     const zoom = this.map.getZoom()
+    // 桌機／平板大視窗整體放大：手機尺寸的圖示在大螢幕上近乎不可見（實地回報）
+    const k = Math.min(size.x, size.y) >= 700 ? 1.5 : 1
+    this.hitR = 16 * k
     this.hits = []
 
     // 站名標籤（列車底下先畫）：z≥14 顯示，自繪確保任何 DPI 都銳利、字級舒適
@@ -72,7 +76,7 @@ export class TrainsLayer {
 
       if (zoom < 13) {
         ctx.beginPath()
-        ctx.arc(p.x, p.y, it.selected ? 5.5 : 4, 0, Math.PI * 2)
+        ctx.arc(p.x, p.y, (it.selected ? 5.5 : 4) * k, 0, Math.PI * 2)
         ctx.fillStyle = it.color
         ctx.fill()
         if (it.selected) {
@@ -83,8 +87,8 @@ export class TrainsLayer {
       } else {
         const q = this.map.latLngToContainerPoint([it.st.aheadLonlat[1], it.st.aheadLonlat[0]])
         const ang = Math.atan2(q.y - p.y, q.x - p.x)
-        const w = zoom >= 15 ? 20 : 14
-        const h = zoom >= 15 ? 9 : 6.5
+        const w = (zoom >= 15 ? 20 : 14) * k
+        const h = (zoom >= 15 ? 9 : 6.5) * k
         ctx.save()
         ctx.translate(p.x, p.y)
         ctx.rotate(ang)
@@ -103,7 +107,7 @@ export class TrainsLayer {
         ctx.stroke()
         // 行進方向白點
         ctx.beginPath()
-        ctx.arc(w / 2 - r, 0, 1.6, 0, Math.PI * 2)
+        ctx.arc(w / 2 - r, 0, 1.6 * k, 0, Math.PI * 2)
         ctx.fillStyle = '#fff'
         ctx.fill()
         ctx.restore()
@@ -113,7 +117,7 @@ export class TrainsLayer {
 
   hitTest(x: number, y: number): TrainState | null {
     let best: TrainState | null = null
-    let bestD = 16
+    let bestD = this.hitR
     for (const h of this.hits) {
       const d = Math.hypot(h.x - x, h.y - y)
       if (d < bestD) {
